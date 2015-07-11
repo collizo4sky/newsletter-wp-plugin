@@ -154,34 +154,52 @@ class Options_Admin extends Base_Registrar {
     if ( is_array( $tags ) && count( $tags ) > 0 ) {
       for ( $i = 0; $i < count( $tags ); $i++ ) {
         if ( 0 != $i ) {
-          $filtered .= ',';
+          $filtered_tags .= ',';
         }
 
-        $filtered .= '{';
-        // TODO
-        var_dump( $tag );        
-        $filtered .= '}';
+        $filtered_tags .= '{';
+        $filtered_tags .= '"term_id" : "' . $tags[ $i ]->term_id . ',"';
+        $filtered_tags .= '"name" : "' . $tags[ $i ]->name . '"';       
+        $filtered_tags .= '}';
       }
     }
 
     $filtered_tags .= ']';
 
-    // TODO
+    // TODO typeahead for tags
   }
 
   /**
    * Print the category section
    */
   public function newsletter_category_callback() {
-    // TODO
+    $categories = get_categories();
+    $filtered_categories = '[';
+
+    if ( is_array( $categories ) && count( $categories ) > 0 ) {
+      for ( $i = 0; $i < count( $categories ); $i++ ) {
+        if ( 0 != $i ) {
+          $filtered_categories .= ',';
+        }
+
+        $filtered_categories .= '{';
+        $filtered_categories .= '"term_id" : "' . $categories[ $i ]->term_id . ',"';
+        $filtered_categories .= '"name" : "' . $categories[ $i ]->name . '"';       
+        $filtered_categories .= '}';
+      }
+    }
+
+    $filtered_categories .= ']';
+
+    // TODO typeahead for categories
   }
   
   public function newsletter_start_date_callback() {
-    // TODO
+    // TODO datepicker
   }
 
   public function newsletter_end_date_callback() {
-    // TODO
+    // TODO datepicker
   }
 
   public function form_submit( $input ) {
