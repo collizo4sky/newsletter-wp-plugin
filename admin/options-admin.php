@@ -11,6 +11,7 @@ class Options_Admin extends Base_Registrar {
   public static $section_newsletter_category   = 'gios_newsletter_category';
   public static $section_newsletter_date_start = 'gios_newsletter_date_start';
   public static $section_newsletter_date_end   = 'gios_newsletter_date_end';
+  public static $section_newsletter_template   = 'gios_newsletter_template';
 
 
   /**
@@ -26,6 +27,7 @@ class Options_Admin extends Base_Registrar {
           self::$section_newsletter_category => '',
           self::$section_newsletter_date_start => '',
           self::$section_newsletter_date_end => '',
+          self::$section_newsletter_template => '',
         )
     );
 
@@ -56,7 +58,9 @@ class Options_Admin extends Base_Registrar {
    * Enqueue the stylesheets for the admin interface
    */
   public function admin_enqueue_scripts() {
-    // Nothing for now
+    // Load in Bloodhound and typeahead
+    wp_enqueue_script( 'twitter-typeahead', plugins_url( '/js/typeahead.bundle.min.js' , __FILE__ ), array(), '0.11.1', true );
+    wp_enqueue_style( 'twitter-typeahead-scaffolding', plugins_url( '/css/scaffolding.css' , __FILE__ ), array(), '0.11.2' );
   }
 
   /**
@@ -135,6 +139,20 @@ class Options_Admin extends Base_Registrar {
         self::$section_name,
         self::$section_id
     );
+
+    // ========
+    // Template
+    // ========
+    add_settings_field(
+        self::$section_newsletter_template,
+        'Template',
+        array(
+          $this,
+          'newsletter_template_callback',
+        ),
+        self::$section_name,
+        self::$section_id
+    );
   }
 
   /**
@@ -158,7 +176,7 @@ class Options_Admin extends Base_Registrar {
         }
 
         $filtered_tags .= '{';
-        $filtered_tags .= '"term_id" : "' . $tags[ $i ]->term_id . ',"';
+        $filtered_tags .= '"term_id" : "' . $tags[ $i ]->term_id . '",';
         $filtered_tags .= '"name" : "' . $tags[ $i ]->name . '"';       
         $filtered_tags .= '}';
       }
@@ -166,7 +184,7 @@ class Options_Admin extends Base_Registrar {
 
     $filtered_tags .= ']';
 
-    // TODO typeahead for tags
+    $this->print_typeahead( $filtered_tags, 'tags' );
   }
 
   /**
@@ -177,21 +195,23 @@ class Options_Admin extends Base_Registrar {
     $filtered_categories = '[';
 
     if ( is_array( $categories ) && count( $categories ) > 0 ) {
-      for ( $i = 0; $i < count( $categories ); $i++ ) {
-        if ( 0 != $i ) {
+      $first = true;
+      foreach ( $categories as $category ) {
+        if ( ! $first ) {
           $filtered_categories .= ',';
         }
-
+        $first = false;
+        
         $filtered_categories .= '{';
-        $filtered_categories .= '"term_id" : "' . $categories[ $i ]->term_id . ',"';
-        $filtered_categories .= '"name" : "' . $categories[ $i ]->name . '"';       
+        $filtered_categories .= '"term_id" : "' . $category->term_id . '",';
+        $filtered_categories .= '"name" : "' . $category->name . '"';       
         $filtered_categories .= '}';
       }
     }
 
     $filtered_categories .= ']';
 
-    // TODO typeahead for categories
+    $this->print_typeahead( $filtered_categories, 'categories' );
   }
   
   public function newsletter_start_date_callback() {
@@ -202,8 +222,102 @@ class Options_Admin extends Base_Registrar {
     // TODO datepicker
   }
 
+  public function newsletter_template_callback() {
+    // TODO 
+  }
+
   public function form_submit( $input ) {
     // TODO filter and make sure the newsletter categories are valid
     return $input;
+  }
+
+  protected function print_typeahead( $data, $name ) {
+    echo '<input class="regular-text" type="text" name="' . $name . '" id="' . $name . '-id" placeholder="Add ' . $name . '"/>';
+    echo '<button class="button" id="' . $name . '-button-id">+</button>';
+
+    echo '<div id="' . $name . '-pills-id" class="pills"></div>';
+
+    $js = <<<JAVASCRIPT
+      +function () {
+        jQuery(function ($) {
+          var substringMatcher = function (strs) {
+            return function findMatches(q, cb) {
+              var matches, substringRegex;
+           
+              // an array that will be populated with substring matches
+              matches = [];
+           
+              // regex used to determine if a string contains the substring `q`
+              substrRegex = new RegExp(q, 'i');
+           
+              // iterate through the pool of strings and for any string that
+              // contains the substring `q`, add it to the `matches` array
+              $.each(strs, function(i, str) {
+                if (substrRegex.test(str.name)) {
+                  matches.push(str);
+                }
+              });
+           
+              cb(matches);
+            };
+          }
+
+          var data = $data;
+
+          $('#{$name}-id').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+          }, {
+            name: '$name',
+            source : substringMatcher( data ),
+            display: 'name'
+          }).keypress( function(e) {
+            if ( e.keyCode === 13 /* enter key */ ) {
+              e.preventDefault();
+              $('#{$name}-button-id').click();
+              return;
+            }
+          });
+
+          $('#{$name}-button-id').click(function(e) {
+            e.preventDefault();
+
+            var term = $('#{$name}-id').val();
+            var term_id = -1;
+            var found = false;
+
+            if ( term === '' ) {
+              return;
+            }
+
+            for (var i = 0; i < data.length; i++) {
+              if ( term === data[i]['name'] ) {
+                term_id = data[i]['term_id'];
+                found = true;
+              }
+            }
+
+            if ( ! found ) {
+              return;
+            }
+
+            var close = '<span class="close">X</span>';
+
+            $('#{$name}-pills-id').append(
+              '<div class="pill" data-id="' + term_id + '">' + term + close + '</div>'
+            );
+
+            // Clear typeahead
+            $('#{$name}-id').val('');
+          });
+
+          $('#{$name}-pills-id').on('click', '.pill .close', function ( e ) {
+            $(this).parent().remove();
+          });
+        });
+      }();
+JAVASCRIPT;
+    echo '<script>' . $js . '</script>';
   }
 }
