@@ -20,6 +20,12 @@ require_once( plugin_dir_path( __FILE__ ) . '/../options-admin.php' );
     <a type="submit" name="generate" class="button button-primary">Generate</a>
   </form>
 
+  <div id="saved-options">
+    <?php
+      \Newsletter_WP\Options_Admin::print_saved_options();
+    ?>
+  </div>
+
   <script>
     window.url = '<?php echo plugins_url( '../../generators/email-templates.php', __FILE__ ) ?>';
   </script>

@@ -155,7 +155,7 @@ $tags       = get_parameter( 'tags', false );
 $categories = get_parameter( 'categories', false );
 $start_date = get_parameter( 'start_date', false );
 $end_date   = get_parameter( 'end_date', false );
-$template   = get_parameter( 'template', 'board-letter' ); // TODO this should have a real default
+$template   = get_parameter( 'template', 'board-letter' );
 
 if ( false !== $tags ) {
   $post_options['tag'] = $tags;
