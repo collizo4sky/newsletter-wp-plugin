@@ -178,8 +178,6 @@ if ( false !== $start_date || false !== $end_date ) {
   $post_options['date_query'] = $date_query;
 }
 
-var_dump( $post_options );
-
 $posts = get_posts( $post_options );
 $data  = generate_data( $title, $posts );
 

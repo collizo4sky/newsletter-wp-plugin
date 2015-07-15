@@ -28,6 +28,7 @@ These queries can be saved for reuse.
 Emails generated from these queries can be viewed or downloaded.
 
 * https://github.com/twitter/typeahead.js
+* https://github.com/dbushell/Pikaday
 
 # Email Generation
 
