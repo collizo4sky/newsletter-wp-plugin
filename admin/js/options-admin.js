@@ -97,6 +97,10 @@ jQuery( function ( $ ) {
           url += '&template=' + template;
         }
 
+        if ( route === 'download' ) {
+          url += '&download=true';
+        }
+
         var win = window.open( url, '_blank' );
         win.focus();
       }

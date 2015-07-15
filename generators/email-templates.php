@@ -149,6 +149,7 @@ $post_options = array(
   'post_type'      => 'post',
 );
 
+$download   = get_parameter( 'download', false );
 $title      = get_parameter( 'title', '' );
 $tags       = get_parameter( 'tags', false );
 $categories = get_parameter( 'categories', false );
@@ -188,16 +189,36 @@ $css  = $scss->compile('@import "main.scss"');
 
 // Step 2. Compile Handlebars template with Data
 $template_path =  __DIR__ . '/../email-templates/emails/';
-$engine        = new Handlebars(
-    array(
-      'loader' => new \Handlebars\Loader\FilesystemLoader( $template_path ),
-      'partials_loader' => new \Handlebars\Loader\FilesystemLoader( $template_path, array( 'prefix' => '_' ) ),
-    )
-);
-$compiled      = $engine->render( $template, $data );
+
+try {
+  $engine = new Handlebars(
+      array(
+        'loader' => new \Handlebars\Loader\FilesystemLoader( $template_path ),
+        'partials_loader' => new \Handlebars\Loader\FilesystemLoader( $template_path, array( 'prefix' => '_' ) ),
+      )
+  );
+
+  $compiled = $engine->render( $template, $data );
+} catch (Exception $e) {
+  echo 'Could not find template.';
+  die();
+}
+
+
 
 // Step 3. Inline CSS into compiled template
 $emogrifier = new \Pelago\Emogrifier( $compiled, $css );
 $html       = $emogrifier->emogrify();
 
-print $html;
+if ( $download === 'true' ) {
+  header('HTTP/1.0 200 OK');
+  header('Content-Description: File Transfer');
+  header('Content-Type: application/octet-stream');
+  header("Content-Disposition: attachment; filename=\"" . urlencode($title) . '.html\"');
+  header('Expires: 0');
+  header('Cache-Control: must-revalidate');
+  header('Pragma: public');
+  header("Content-Length: " . strlen( $html ) );
+}
+
+echo $html;
