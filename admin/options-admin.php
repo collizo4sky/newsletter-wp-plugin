@@ -7,6 +7,7 @@ class Options_Admin extends Base_Registrar {
   public static $options_group                 = 'newsletter_options_group';
   public static $section_name                  = 'gios_newsletter_display_admin';
   public static $section_id                    = 'gios_newsletter_display_admin_id';
+  public static $section_newsletter_title      = 'gios_newsletter_title';
   public static $section_newsletter_tags       = 'gios_newsletter_tags';
   public static $section_newsletter_category   = 'gios_newsletter_category';
   public static $section_newsletter_date_start = 'gios_newsletter_date_start';
@@ -23,6 +24,7 @@ class Options_Admin extends Base_Registrar {
     add_option(
         self::$options_name,
         array(
+          self::$section_newsletter_title => '',
           self::$section_newsletter_tags => '',
           self::$section_newsletter_category => '',
           self::$section_newsletter_date_start => '',
@@ -60,6 +62,7 @@ class Options_Admin extends Base_Registrar {
   public function admin_enqueue_scripts() {
     // Load in Bloodhound and typeahead
     wp_enqueue_script( 'twitter-typeahead', plugins_url( '/js/typeahead.bundle.min.js' , __FILE__ ), array(), '0.11.1', true );
+    wp_enqueue_script( 'options-admin', plugins_url( '/js/options-admin.js' , __FILE__ ), array('twitter-typeahead'), '0.0.1', true );
     wp_enqueue_style( 'twitter-typeahead-scaffolding', plugins_url( '/css/scaffolding.css' , __FILE__ ), array(), '0.11.2' );
   }
 
@@ -82,6 +85,20 @@ class Options_Admin extends Base_Registrar {
           'print_section_info',
         ),
         self::$section_name
+    );
+
+    // =====
+    // Title
+    // =====
+    add_settings_field(
+        self::$section_newsletter_title,
+        'Title',
+        array(
+          $this,
+          'newsletter_title_callback',
+        ),
+        self::$section_name,
+        self::$section_id
     );
 
     // ====
@@ -163,6 +180,13 @@ class Options_Admin extends Base_Registrar {
   }
 
   /**
+   * Print the title section
+   */
+  public function newsletter_title_callback() {
+    print '<input type="text" placeholder="Email Title" class="regular-text" name="title" id="title" />';
+  }
+
+  /**
    * Print the tag section
    */
   public function newsletter_tags_callback() {
@@ -234,7 +258,6 @@ class Options_Admin extends Base_Registrar {
   protected function print_typeahead( $data, $name ) {
     echo '<input class="regular-text" type="text" name="' . $name . '" id="' . $name . '-id" placeholder="Add ' . $name . '"/>';
     echo '<button class="button" id="' . $name . '-button-id">+</button>';
-
     echo '<div id="' . $name . '-pills-id" class="pills"></div>';
 
     $js = <<<JAVASCRIPT
@@ -305,7 +328,7 @@ class Options_Admin extends Base_Registrar {
             var close = '<span class="close">X</span>';
 
             $('#{$name}-pills-id').append(
-              '<div class="pill" data-id="' + term_id + '">' + term + close + '</div>'
+              '<div class="pill" data-id="' + term_id + '" data-name="' + term + '">' + term + close + '</div>'
             );
 
             // Clear typeahead

@@ -21,60 +21,6 @@ require_once( plugin_dir_path( __FILE__ ) . '/../options-admin.php' );
   </form>
 
   <script>
-  jQuery( function ( $ ) {
-    var $lastButtonClicked;
-
-    $( '#newsletter-display-data a.button' ).click( function markButtons( e ) {
-      e.preventDefault();
-
-      $lastButtonClicked = $( this );
-      $( this ).parent( 'form' ).submit();
-    } );
-
-    $( '#newsletter-display-data form' ).submit(function routeFormSubmission( e ) {
-      var route, tags = false, category = false, start_date = false, end_date = false, template = false;
-
-      e.preventDefault();
-
-      if ( $lastButtonClicked ) {
-        route = $lastButtonClicked.attr( 'name' );
-      } else {
-        route = 'generate';
-      }
-
-      if ( route === 'save-options' ) {
-        // TODO save the options!
-        // Ajax post and update
-      } else if ( route === 'download' || route === 'generate' ) {
-        var url = "<?php echo plugins_url( '../../generators/email-templates.php', __FILE__ ) ?>";
-
-        url += '?';
-        url += 'type=' + route;
-
-        if ( tags !== false ) {
-          url += '&tags=' + tags;
-        }
-
-        if ( categories !== false ) {
-          url += '&categories=' + categories;
-        }
-
-        if ( start_date !== false ) {
-          url += '&start_date=' + start_date;
-        }
-
-        if ( end_date !== false ) {
-          url += '&end_date=' + end_date;
-        }
-
-        if ( template !== false ) {
-          url += '&template=' + template;
-        }
-
-        var win = window.open( url, '_blank' );
-        win.focus();
-      }
-    });
-  } );
+    window.url = '<?php echo plugins_url( '../../generators/email-templates.php', __FILE__ ) ?>';
   </script>
 </div>

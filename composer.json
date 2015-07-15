@@ -1,0 +1,9 @@
+{
+  "name": "gios-asu/wordpress-newsletter-plugin",
+  "description": "Newsletter generator for GIOS WordPress",
+  "require": {
+    "leafo/scssphp": "0.0.12",
+    "xamin/handlebars.php": "dev-master",
+    "pelago/emogrifier": "@dev"
+  }
+}
