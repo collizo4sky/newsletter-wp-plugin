@@ -201,6 +201,7 @@ class Options_Admin extends Base_Registrar {
 
         $filtered_tags .= '{';
         $filtered_tags .= '"term_id" : "' . $tags[ $i ]->term_id . '",';
+        $filtered_tags .= '"term_slug" : "' . $tags[ $i ]->slug . '",';
         $filtered_tags .= '"name" : "' . $tags[ $i ]->name . '"';       
         $filtered_tags .= '}';
       }
@@ -228,6 +229,7 @@ class Options_Admin extends Base_Registrar {
         
         $filtered_categories .= '{';
         $filtered_categories .= '"term_id" : "' . $category->term_id . '",';
+        $filtered_categories .= '"term_slug" : "' . $category->slug . '",';
         $filtered_categories .= '"name" : "' . $category->name . '"';       
         $filtered_categories .= '}';
       }
@@ -308,6 +310,7 @@ class Options_Admin extends Base_Registrar {
 
             var term = $('#{$name}-id').val();
             var term_id = -1;
+            var term_slug = '';
             var found = false;
 
             if ( term === '' ) {
@@ -317,6 +320,7 @@ class Options_Admin extends Base_Registrar {
             for (var i = 0; i < data.length; i++) {
               if ( term === data[i]['name'] ) {
                 term_id = data[i]['term_id'];
+                term_slug = data[i]['term_slug'];
                 found = true;
               }
             }
@@ -328,7 +332,7 @@ class Options_Admin extends Base_Registrar {
             var close = '<span class="close">X</span>';
 
             $('#{$name}-pills-id').append(
-              '<div class="pill" data-id="' + term_id + '" data-name="' + term + '">' + term + close + '</div>'
+              '<div class="pill" data-id="' + term_id + '" data-slug="' + term_slug + '">' + term + close + '</div>'
             );
 
             // Clear typeahead

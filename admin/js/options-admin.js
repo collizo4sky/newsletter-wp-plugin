@@ -10,7 +10,7 @@ jQuery( function ( $ ) {
       }
 
       var result = $selector.map(function (i, e) {
-        return encodeURIComponent( $(this).attr('data-name') );
+        return encodeURIComponent( $(this).attr('data-slug') );
       }).toArray();
 
       if ( result.length === 0 ) {
@@ -18,7 +18,7 @@ jQuery( function ( $ ) {
       }
 
       return result.reduce(function(a, b) {
-        return a + ',' + b;
+        return a + '+' + b;
       });
     }
 

@@ -1,12 +1,118 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta name="viewport" content="width=device-width" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>{{ title }}</title>
+  <meta name="viewport" content="width=device-width" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>{{ title }}</title>
 </head>
+<style type="text/css">
+body {
+  background-color: #bee5f9;  
+  background-color: white;  
+  font-style:normal; 
+  font-family:'Gill Sans / Gill Sans MT', 'Gill Sans MT', 'Droid Sans', Verdana, Arial, Geneva, sans-serif;
+  font-size:14px;
+  font-weight:normal; 
+  margin:0; padding:0;
+  font-size:14px;
+  line-height: normal;
+  text-align: left;
+  color:#506570;
+} 
 
+a {
+  color: #990033;
+}
+
+h2 {
+  font-weight:normal;
+  color:#506570; //grey
+  color:#990033; //asu marroon
+  font-size:18px;
+}
+
+h2 a {
+  color:#990033;
+  text-decoration:none;
+} 
+
+h2 a:hover{
+  text-decoration:underline;
+}
+
+.alignright {
+  margin:0 0 0 15px;
+  float:right;
+  width: 170px;
+}
+
+h1, h2, p, div {
+  text-align: left;
+}
+
+</style>
 <body>
-<div class="wow">{{ title }}</div>
+  <center>
+    <br/>
+    <table bgcolor="#ffffff" border="0" cellspacing="15" cellpadding="0" width="700">
+
+      <tr valign="center"><td colspan="1" align="left">
+        <a href="http://sustainability.asu.edu/" target="_blank" title="ASU's Global Institute of Sustainability"><img alt="Julie Ann Wrigley Global Institute of Sustainability" title="Julie Ann Wrigley Global Institute of Sustainability" src="http://sustainability.asu.edu/docs/gios/events/img/logo-bl.jpg" border="0" width="" height=""></a>
+      </td><td align="right" width="70%">
+      <span style="font-size:25px;color:lightgrey;line-height:normal;"><strong>{{title}}</strong></span>
+    </td></tr>
+
+    <tr valign="top">
+      <td  colspan="2">
+        <div style="background:#ffffff; padding:0px" class="wordpress" data-count="1" data-includeprivate="true" data-template="wordpress-intro" data-category="board-letter" data-tag="board-letter-intro" data-prepend="true"></div>
+      </td>
+    </tr>
+
+    <tr valign="top">
+      <td  colspan="2">
+        <div class="wordpress" data-includeprivate="true" data-template="wordpress-nuggets" data-category="board-letter" data-tag="board-nugget">
+          {{#each posts}}
+          <table bgcolor="#f5fbfe" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: 2px #e9eff2 solid" width="100%">
+            <tr valign="top" border="0">
+              <td width="80" style="padding-right:15px; padding-top:15px; padding-left:15px; padding-bottom:15px;" border="0" >
+                <img width="80" src="{{image}}">
+
+              </td>
+
+              <td style="padding-top:15px; padding-right:15px; padding-bottom:15px;">
+
+                <p style="font-family:'Gill Sans / Gill Sans MT', 'Gill Sans MT', Verdana, Arial, Geneva, sans-serif; font-weight:normal; line-height:normal; font-size:19px; color:#990033; margin: 0 0 5px 0; padding: 0;text-decoration:none;"><a target="_blank" href="{{source}}" style="font-family:'Gill Sans / Gill Sans MT', 'Gill Sans MT', Verdana, Arial, Geneva, sans-serif; font-weight:normal; line-height:normal;   color:#990033; margin: 0 0 0 0; padding: 0;text-decoration:none;">{{title}}</a>
+                </p>
+
+                <p style="font-family:'Gill Sans / Gill Sans MT', 'Gill Sans MT', Verdana, Arial, Geneva, sans-serif; text-align: left; color:#506570; font-style:normal; color:#506570;   line-height:normal; font-weight:normal;margin:0; padding:0; font-size:15px;">
+                  {{{post_excerpt}}}
+                  <a target="_blank" href="{{source}}">Read more &raquo;</a>
+                </p>
+
+              </td>
+            </tr>
+          </table>
+          <br>
+          {{/each}}
+          <br>
+        </div>
+      </td>
+    </tr>
+
+    <tr><td colspan="2" align="center" style="padding:30px;">
+
+
+
+      *|HTML:LIST_ADDRESS_HTML|*
+
+
+      <br><br><br>
+
+      <a href="*|UNSUB|*">Unsubscribe</a> <br>
+
+    </td></tr>
+  </table>
+  <br>
+</center>
 </body>
 </html>

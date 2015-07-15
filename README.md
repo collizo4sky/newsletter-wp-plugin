@@ -26,3 +26,10 @@ The admin panel will be used to generate emails based on different criteria:
 These queries can be saved for reuse. 
 
 Emails generated from these queries can be viewed or downloaded.
+
+* https://github.com/twitter/typeahead.js
+
+# Email Generation
+
+* https://github.com/jjriv/emogrifier
+* http://leafo.net/scssphp/docs
