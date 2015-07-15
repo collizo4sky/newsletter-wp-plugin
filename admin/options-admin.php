@@ -60,10 +60,13 @@ class Options_Admin extends Base_Registrar {
    * Enqueue the stylesheets for the admin interface
    */
   public function admin_enqueue_scripts() {
-    // Load in Bloodhound and typeahead
+    // Load in Bloodhound and typeahead, pickaday
     wp_enqueue_script( 'twitter-typeahead', plugins_url( '/js/typeahead.bundle.min.js' , __FILE__ ), array(), '0.11.1', true );
-    wp_enqueue_script( 'options-admin', plugins_url( '/js/options-admin.js' , __FILE__ ), array('twitter-typeahead'), '0.0.1', true );
+    wp_enqueue_script( 'pickaday', plugins_url( '/js/pickaday.min.js' , __FILE__ ), array(), '1.3.2', true );
+    wp_enqueue_script( 'options-admin', plugins_url( '/js/options-admin.js' , __FILE__ ), array('twitter-typeahead', 'pickaday'), '0.0.1', true );
+
     wp_enqueue_style( 'twitter-typeahead-scaffolding', plugins_url( '/css/scaffolding.css' , __FILE__ ), array(), '0.11.2' );
+    wp_enqueue_style( 'pickaday-stylesheet', plugins_url( '/css/pickaday.css' , __FILE__ ), array(), '1.3.2' );
   }
 
   /**
@@ -241,15 +244,42 @@ class Options_Admin extends Base_Registrar {
   }
   
   public function newsletter_start_date_callback() {
-    // TODO datepicker
+    print '<input type="text" id="start-date-datepicker">';
+    print '<script>
+      jQuery(function($) { new Pikaday({ field: document.getElementById("start-date-datepicker") }) });
+    </script>';
   }
 
   public function newsletter_end_date_callback() {
-    // TODO datepicker
+    print '<input type="text" id="end-date-datepicker">';
+    print '<script>
+      jQuery(function($) { new Pikaday({ field: document.getElementById("end-date-datepicker") }) });
+    </script>';
   }
 
   public function newsletter_template_callback() {
-    // TODO 
+    $templates = '[';
+    $first = true;
+
+    foreach ( glob( dirname( __FILE__ )  . '/../email-templates/emails/*.handlebars', GLOB_BRACE ) as $filename ) {
+      $parts = explode( '.', basename( $filename ) );
+      $template_name = $parts[0];
+
+      if ( ! $first ) {
+        $templates .= ',';
+      }
+      $first = false;
+      
+      $templates .= '{';
+      $templates .= '"term_id" : "' . $template_name . '",';
+      $templates .= '"term_slug" : "' . $template_name . '",';
+      $templates .= '"name" : "' . $template_name . '"';       
+      $templates .= '}'; 
+    }
+
+    $templates .= ']';
+
+    $this->print_typeahead_no_pills( $templates, 'template' );
   }
 
   public function form_submit( $input ) {
@@ -257,11 +287,25 @@ class Options_Admin extends Base_Registrar {
     return $input;
   }
 
-  protected function print_typeahead( $data, $name ) {
-    echo '<input class="regular-text" type="text" name="' . $name . '" id="' . $name . '-id" placeholder="Add ' . $name . '"/>';
-    echo '<button class="button" id="' . $name . '-button-id">+</button>';
-    echo '<div id="' . $name . '-pills-id" class="pills"></div>';
+  protected function print_typeahead_no_pills( $data, $name ) {
+    $this->print_typeahead( $data, $name, true );
+  }
 
+  protected function print_typeahead( $data, $name, $no_pills = false ) {
+    $placeholder_text = 'Add ' . $name;
+    $no_pills_string = $no_pills ? 'true' : 'false';
+
+    if ( $no_pills ) {
+      $placeholder_text = 'Select a ' . $name;
+    }
+
+    echo '<input class="regular-text" type="text" name="' . $name . '" id="' . $name . '-id" placeholder="' . $placeholder_text . '"/>';
+
+    if ( ! $no_pills ) {
+      echo '<button class="button" id="' . $name . '-button-id">+</button>';
+      echo '<div id="' . $name . '-pills-id" class="pills"></div>';  
+    }
+    
     $js = <<<JAVASCRIPT
       +function () {
         jQuery(function ($) {
@@ -297,51 +341,55 @@ class Options_Admin extends Base_Registrar {
             name: '$name',
             source : substringMatcher( data ),
             display: 'name'
-          }).keypress( function(e) {
-            if ( e.keyCode === 13 /* enter key */ ) {
-              e.preventDefault();
-              $('#{$name}-button-id').click();
-              return;
-            }
           });
 
-          $('#{$name}-button-id').click(function(e) {
-            e.preventDefault();
-
-            var term = $('#{$name}-id').val();
-            var term_id = -1;
-            var term_slug = '';
-            var found = false;
-
-            if ( term === '' ) {
-              return;
-            }
-
-            for (var i = 0; i < data.length; i++) {
-              if ( term === data[i]['name'] ) {
-                term_id = data[i]['term_id'];
-                term_slug = data[i]['term_slug'];
-                found = true;
+          if ( ! {$no_pills_string} ) {
+            $('#{$name}-id').keypress( function(e) {
+              if ( e.keyCode === 13 /* enter key */ ) {
+                e.preventDefault();
+                $('#{$name}-button-id').click();
+                return;
               }
-            }
+            });
 
-            if ( ! found ) {
-              return;
-            }
+            $('#{$name}-button-id').click(function(e) {
+              e.preventDefault();
 
-            var close = '<span class="close">X</span>';
+              var term = $('#{$name}-id').val();
+              var term_id = -1;
+              var term_slug = '';
+              var found = false;
 
-            $('#{$name}-pills-id').append(
-              '<div class="pill" data-id="' + term_id + '" data-slug="' + term_slug + '">' + term + close + '</div>'
-            );
+              if ( term === '' ) {
+                return;
+              }
 
-            // Clear typeahead
-            $('#{$name}-id').val('');
-          });
+              for (var i = 0; i < data.length; i++) {
+                if ( term === data[i]['name'] ) {
+                  term_id = data[i]['term_id'];
+                  term_slug = data[i]['term_slug'];
+                  found = true;
+                }
+              }
 
-          $('#{$name}-pills-id').on('click', '.pill .close', function ( e ) {
-            $(this).parent().remove();
-          });
+              if ( ! found ) {
+                return;
+              }
+
+              var close = '<span class="close">X</span>';
+
+              $('#{$name}-pills-id').append(
+                '<div class="pill" data-id="' + term_id + '" data-slug="' + term_slug + '">' + term + close + '</div>'
+              );
+
+              // Clear typeahead
+              $('#{$name}-id').val('');
+            });
+
+            $('#{$name}-pills-id').on('click', '.pill .close', function ( e ) {
+              $(this).parent().remove();
+            });
+          } // End if
         });
       }();
 JAVASCRIPT;

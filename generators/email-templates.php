@@ -172,11 +172,13 @@ if ( false !== $start_date || false !== $end_date ) {
   }
 
   if ( false !== $end_date ) {
-    $date_query['before'] = $start_date;
+    $date_query['before'] = $end_date;
   }
 
   $post_options['date_query'] = $date_query;
 }
+
+var_dump( $post_options );
 
 $posts = get_posts( $post_options );
 $data  = generate_data( $title, $posts );

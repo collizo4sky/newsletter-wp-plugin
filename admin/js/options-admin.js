@@ -55,11 +55,14 @@ jQuery( function ( $ ) {
       // Categories
       categories = get_pill_data( $('#categories-pills-id .pill') );
 
-      // TODO start date
+      // start date
+      start_date = $('#start-date-datepicker').val();
 
-      // TODO end date
+      // end date
+      end_date = $('#end-date-datepicker').val();
 
-      // TODO template
+      // template
+      template = $('#template-id').val();
 
       if ( route === 'save-options' ) {
         // TODO save the options!
