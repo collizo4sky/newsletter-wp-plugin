@@ -14,8 +14,6 @@ class Options_Admin extends Base_Registrar {
   public static $section_newsletter_date_end   = 'gios_newsletter_date_end';
   public static $section_newsletter_template   = 'gios_newsletter_template';
 
-  public static $section_newsletter_saved_options = 'gios_newsletter_saved_options';
-
   /**
    * All Admin subordinates must report to General Admin
    */
@@ -55,7 +53,6 @@ class Options_Admin extends Base_Registrar {
   public function define_hooks() {
     $this->add_action( 'admin_enqueue_scripts', $this, 'admin_enqueue_scripts' );
     $this->add_action( 'admin_init', $this, 'admin_init' );
-    $this->add_action( 'wp_ajax_add_newsletter_options', $this, 'add_newsletter_options' );
   }
 
   /**
@@ -177,57 +174,6 @@ class Options_Admin extends Base_Registrar {
     );
   }
 
-  public function add_newsletter_options() {
-    $title = $this->post_parameter( 'title', false );
-    $tags = $this->post_parameter( 'tags', false );
-    $categories = $this->post_parameter( 'categories', false );
-    $start_date = $this->post_parameter( 'start_date', false );
-    $end_date = $this->post_parameter( 'end_date', false );
-    $template = $this->post_parameter( 'template', 'baord-letter' );
-
-    $new_group = array();
-
-    $title      ? $new_group['title']      = $title : false;
-    $tags       ? $new_group['tags']       = explode( '+', $tags ) : false;
-    $categories ? $new_group['categories'] = explode( '+', $categories ) : false;
-    $start_date ? $new_group['start_date'] = $start_date : false;
-    $end_date   ? $new_group['end_date']   = $end_date : false;
-    $template   ? $new_group['template']   = $template : false;
-
-    $settings = get_option( self::$section_name, array() );
-
-    if ( ! array_key_exists( self::$section_newsletter_saved_options, $settings ) ) {
-      $settings[ self::$section_newsletter_saved_options ] = array();
-    }
-
-    $settings[ self::$section_newsletter_saved_options ][] = $new_group;
-
-    update_option( self::$section_name, $settings );
-
-    self::print_saved_options( $new_group );
-  }
-
-  public static function print_saved_options( $group = false ) {
-    $settings = get_option( self::$section_name, array() );
-    $groups = array();
-
-    if ( $group ) {
-      $groups[] = $group;
-    }
-    else if ( array_key_exists( self::$section_newsletter_saved_options, $settings ) ) {
-      $groups = $settings[ self::$section_newsletter_saved_options ];
-    }
-
-    foreach ( $groups as $group ) {
-      $html = <<<HTML
-        <div class="group">
-          {$group['title']}
-          {$group['template']}
-        </div>
-HTML;
-      print $html;
-    }
-  }
 
   /**
    * Print the Section text
@@ -448,13 +394,5 @@ HTML;
       }();
 JAVASCRIPT;
     echo '<script>' . $js . '</script>';
-  }
-
-  private function post_parameter( $name, $default ) {
-    if ( array_key_exists( $name, $_POST ) ) {
-      return $_POST[ $name ];
-    } else {
-      return $default;
-    }
   }
 }

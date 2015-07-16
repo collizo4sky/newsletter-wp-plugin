@@ -64,39 +64,7 @@ jQuery( function ( $ ) {
       // template
       template = $('#template-id').val();
 
-      if ( route === 'save-options' ) {
-        var data = {
-          action : 'add_newsletter_options',
-        };
-
-        if ( title !== false ) {
-          data['title'] = title;
-        }
-
-        if ( tags !== false ) {
-          data['tags'] = tags;
-        }
-
-        if ( categories !== false ) {
-          data['categories'] = categories;
-        }
-
-        if ( start_date !== false ) {
-          data['start_date'] =  start_date;
-        }
-
-        if ( end_date !== false ) {
-          data['end_date'] = end_date;
-        }
-
-        if ( template !== false ) {
-          data['template'] =  template;
-        }
-
-        $.post( ajaxurl /* set by wordpress */, data, function ( response ) {
-          $('#saved-options').append( response );
-        } );
-      } else if ( route === 'download' || route === 'generate' ) {
+      if ( route === 'download' || route === 'generate' ) {
         var url = window.url;
 
         url += '?';
