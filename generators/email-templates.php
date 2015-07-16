@@ -158,6 +158,23 @@ $end_date   = get_parameter( 'end_date', false );
 $template   = get_parameter( 'template', 'board-letter' );
 $limit      = get_parameter( 'limit', '-1' );
 
+// Validate input
+if ( empty( $title ) ) {
+  print 'Title is required.';
+  die();
+}
+
+if ( empty( $categories ) ) {
+  print 'A category is required.';
+  die();
+}
+
+if ( empty( $template ) ) {
+  print 'A template is required.';
+  die();
+}
+
+
 if ( false !== $tags ) {
   $post_options['tag'] = $tags;
 }
