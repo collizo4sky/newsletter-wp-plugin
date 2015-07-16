@@ -14,6 +14,8 @@ dependent on tags, categories, and sort order passed to it.
 
 The plugin will take the posts and display them in an email-friendly page.
 
+We are purposely tracking the vendor folder.
+
 # Admin Panel
 
 The admin panel will be used to generate emails based on different criteria:
