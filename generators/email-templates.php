@@ -204,13 +204,12 @@ try {
   die();
 }
 
-
-
 // Step 3. Inline CSS into compiled template
 $emogrifier = new \Pelago\Emogrifier( $compiled, $css );
 $html       = $emogrifier->emogrify();
 
 if ( $download === 'true' ) {
+  // YOU NEED TO TELL THE BROWSER EVERYTHING IS OK
   header('HTTP/1.0 200 OK');
   header('Content-Description: File Transfer');
   header('Content-Type: application/octet-stream');
