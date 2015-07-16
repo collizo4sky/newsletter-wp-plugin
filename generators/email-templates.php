@@ -156,6 +156,7 @@ $categories = get_parameter( 'categories', false );
 $start_date = get_parameter( 'start_date', false );
 $end_date   = get_parameter( 'end_date', false );
 $template   = get_parameter( 'template', 'board-letter' );
+$limit      = get_parameter( 'limit', '-1' );
 
 if ( false !== $tags ) {
   $post_options['tag'] = $tags;
@@ -177,6 +178,10 @@ if ( false !== $start_date || false !== $end_date ) {
   }
 
   $post_options['date_query'] = $date_query;
+}
+
+if ( $limit !== '-1' ) {
+  $post_options['posts_per_page'] = intval( $limit );
 }
 
 $posts = get_posts( $post_options );

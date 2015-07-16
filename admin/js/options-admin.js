@@ -36,7 +36,7 @@ jQuery( function ( $ ) {
      * Router for form submission
      */
     $( '#newsletter-display-data form' ).submit(function routeFormSubmission( e ) {
-      var route, title = false, tags = false, categories = false, start_date = false, end_date = false, template = false;
+      var route, limit = -1, title = false, tags = false, categories = false, start_date = false, end_date = false, template = false;
 
       e.preventDefault();
 
@@ -53,7 +53,7 @@ jQuery( function ( $ ) {
       tags = get_pill_data( $('#tags-pills-id .pill') );
 
       // Categories
-      categories = get_pill_data( $('#categories-pills-id .pill') );
+      categories = $('#categories-id').val();
 
       // start date
       start_date = $('#start-date-datepicker').val();
@@ -63,6 +63,9 @@ jQuery( function ( $ ) {
 
       // template
       template = $('#template-id').val();
+
+      // template
+      limit = $('#limit-id').val();
 
       if ( route === 'download' || route === 'generate' ) {
         var url = window.url;
@@ -93,6 +96,8 @@ jQuery( function ( $ ) {
         if ( template !== false ) {
           url += '&template=' + template;
         }
+
+        url += '&limit=' + limit;
 
         if ( route === 'download' ) {
           url += '&download=true';

@@ -13,6 +13,7 @@ class Options_Admin extends Base_Registrar {
   public static $section_newsletter_date_start = 'gios_newsletter_date_start';
   public static $section_newsletter_date_end   = 'gios_newsletter_date_end';
   public static $section_newsletter_template   = 'gios_newsletter_template';
+  public static $section_newsletter_post_limit = 'gios_newsletter_post_limit';
 
   /**
    * All Admin subordinates must report to General Admin
@@ -29,6 +30,7 @@ class Options_Admin extends Base_Registrar {
           self::$section_newsletter_date_start => '',
           self::$section_newsletter_date_end => '',
           self::$section_newsletter_template => '',
+          self::$section_newsletter_post_limit => '',
         )
     );
 
@@ -89,89 +91,13 @@ class Options_Admin extends Base_Registrar {
         self::$section_name
     );
 
-    // =====
-    // Title
-    // =====
-    add_settings_field(
-        self::$section_newsletter_title,
-        'Title',
-        array(
-          $this,
-          'newsletter_title_callback',
-        ),
-        self::$section_name,
-        self::$section_id
-    );
-
-    // ====
-    // Tags
-    // ====
-    add_settings_field(
-        self::$section_newsletter_tags,
-        'Tags',
-        array(
-          $this,
-          'newsletter_tags_callback',
-        ),
-        self::$section_name,
-        self::$section_id
-    );
-
-    // ========
-    // Category
-    // ========
-    add_settings_field(
-        self::$section_newsletter_category,
-        'Category',
-        array(
-          $this,
-          'newsletter_category_callback',
-        ),
-        self::$section_name,
-        self::$section_id
-    );
-
-    // ==========
-    // Start Date
-    // ==========
-    add_settings_field(
-        self::$section_newsletter_date_start,
-        'Start Date',
-        array(
-          $this,
-          'newsletter_start_date_callback',
-        ),
-        self::$section_name,
-        self::$section_id
-    );
-
-    // ========
-    // End Date
-    // ========
-    add_settings_field(
-        self::$section_newsletter_date_end,
-        'End Date',
-        array(
-          $this,
-          'newsletter_end_date_callback',
-        ),
-        self::$section_name,
-        self::$section_id
-    );
-
-    // ========
-    // Template
-    // ========
-    add_settings_field(
-        self::$section_newsletter_template,
-        'Template',
-        array(
-          $this,
-          'newsletter_template_callback',
-        ),
-        self::$section_name,
-        self::$section_id
-    );
+    $this->add_settings_field( self::$section_newsletter_title, 'Title', 'newsletter_title_callback' );
+    $this->add_settings_field( self::$section_newsletter_category, 'Category', 'newsletter_category_callback' );
+    $this->add_settings_field( self::$section_newsletter_tags, 'Tags', 'newsletter_tags_callback' );
+    $this->add_settings_field( self::$section_newsletter_date_start, 'Start Date', 'newsletter_start_date_callback' );
+    $this->add_settings_field( self::$section_newsletter_date_end, 'End Date', 'newsletter_end_date_callback' );
+    $this->add_settings_field( self::$section_newsletter_template, 'Template', 'newsletter_template_callback' );
+    $this->add_settings_field( self::$section_newsletter_post_limit, 'Max Number of Posts', 'newsletter_post_limit_callback' );
   }
 
 
@@ -179,7 +105,7 @@ class Options_Admin extends Base_Registrar {
    * Print the Section text
    */
   public function print_section_info() {
-    print 'Enter your settings below:';
+    print 'Create a newsletter below by selecting a template:';
   }
 
   /**
@@ -216,31 +142,33 @@ class Options_Admin extends Base_Registrar {
   }
 
   /**
-   * Print the category section
+   * Print the category section.
+   * 
+   * This will print out a select dropdown of all the categories
    */
   public function newsletter_category_callback() {
     $categories = get_categories();
-    $filtered_categories = '[';
+
+    $html = '<select name="categories" id="categories-id">';
 
     if ( is_array( $categories ) && count( $categories ) > 0 ) {
       $first = true;
       foreach ( $categories as $category ) {
-        if ( ! $first ) {
-          $filtered_categories .= ',';
+        $selected = '';
+        if ( $first === true ) {
+          $selected .= ' selected="selected" ';
         }
         $first = false;
+
+        $data_attribute = ' data-id="' . $category->term_id . '" ';
         
-        $filtered_categories .= '{';
-        $filtered_categories .= '"term_id" : "' . $category->term_id . '",';
-        $filtered_categories .= '"term_slug" : "' . $category->slug . '",';
-        $filtered_categories .= '"name" : "' . $category->name . '"';       
-        $filtered_categories .= '}';
+        $html .= '<option value="' . $category->slug . '" ' . $selected . $data_attribute. '>' . $category->name . '</option>';
       }
     }
 
-    $filtered_categories .= ']';
+    $html .= '</select>';
 
-    $this->print_typeahead( $filtered_categories, 'categories' );
+    print $html;
   }
   
   public function newsletter_start_date_callback() {
@@ -258,28 +186,25 @@ class Options_Admin extends Base_Registrar {
   }
 
   public function newsletter_template_callback() {
-    $templates = '[';
+    $html  = '<select name="template" id="template-id">';
     $first = true;
 
     foreach ( glob( dirname( __FILE__ )  . '/../email-templates/emails/*.handlebars', GLOB_BRACE ) as $filename ) {
       $parts = explode( '.', basename( $filename ) );
       $template_name = $parts[0];
+      $selected = '';
 
-      if ( ! $first ) {
-        $templates .= ',';
+      if ( $first === true ) {
+        $selected .= ' selected="selected" ';
       }
       $first = false;
       
-      $templates .= '{';
-      $templates .= '"term_id" : "' . $template_name . '",';
-      $templates .= '"term_slug" : "' . $template_name . '",';
-      $templates .= '"name" : "' . $template_name . '"';       
-      $templates .= '}'; 
+      $html .= '<option value="' . $template_name . '" ' . $selected . '>' . $template_name . '</option>';
     }
 
-    $templates .= ']';
+    $html .= '</select>';
 
-    $this->print_typeahead_no_pills( $templates, 'template' );
+    print $html;
   }
 
   public function form_submit( $input ) {
@@ -394,5 +319,22 @@ class Options_Admin extends Base_Registrar {
       }();
 JAVASCRIPT;
     echo '<script>' . $js . '</script>';
+  }
+
+  public function newsletter_post_limit_callback() {
+    print '<input type="number" min="-1" max="1000" name="limit" id="limit-id" value="-1" />';
+  }
+
+  private function add_settings_field( $field_name, $field_text, $field_callback ) {
+    add_settings_field(
+        $field_name,
+        $field_text,
+        array(
+          $this,
+          $field_callback,
+        ),
+        self::$section_name,
+        self::$section_id
+    );
   }
 }
