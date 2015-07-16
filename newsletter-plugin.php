@@ -20,13 +20,16 @@ if ( ! function_exists( 'add_filter' ) ) {
 
 define( 'GIOS_NEWSLETTER_WP_VERSION', '1.0.0' );
 
-function require_once_directory( $directory ) {
-  $files = glob( $directory  . '/*.php' );
+if ( ! function_exists( 'require_once_directory' ) ) {
+  function require_once_directory( $directory ) {
+    $files = glob( $directory  . '/*.php' );
 
-  foreach ( $files as $file ) {
-    require_once( $file );
+    foreach ( $files as $file ) {
+      require_once( $file );
+    }
   }
 }
+
 
 function setup_wordpress_newsletter_plugin() {
   // =================
