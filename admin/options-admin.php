@@ -177,6 +177,9 @@ class Options_Admin extends Base_Registrar {
     );
   }
 
+  /**
+   * Called by AJAX call to add a new option group
+   */
   public function add_newsletter_options() {
     $title = $this->post_parameter( 'title', false );
     $tags = $this->post_parameter( 'tags', false );
@@ -207,6 +210,10 @@ class Options_Admin extends Base_Registrar {
     self::print_saved_options( $new_group );
   }
 
+  /**
+   * This can get called by AJAX request for 1 group or on load for all groups
+   * @param $group Array defaults to false. Use to print a specific group of options
+   */
   public static function print_saved_options( $group = false ) {
     $settings = get_option( self::$section_name, array() );
     $groups = array();
@@ -221,11 +228,25 @@ class Options_Admin extends Base_Registrar {
     foreach ( $groups as $group ) {
       $html = <<<HTML
         <div class="group">
-          {$group['title']}
-          {$group['template']}
+          <div>Title: <span class="title">%s</span></div>
+          <div>Tags: <span class="tags">%s</span></div>
+          <div>Categories: <span class="categories">%s</span></div>
+          <div>Start Date: <span class="start-date">%s</span></div>
+          <div>End Date: <span class="end-date">%s</span></div>
+          <div>Template: <span class="template">%s</span></div>
+          <button>Download</button>
+          <button>Generate</button>
         </div>
 HTML;
-      print $html;
+      printf(
+        $html,
+        array_key_exists( 'title',  $group )      ? $group['title'] : '',
+        array_key_exists( 'tags',  $group )       ? join( ', ', $group['tags'] ) : '',
+        array_key_exists( 'categories',  $group ) ? join( ', ', $group['categories'] ) : '',
+        array_key_exists( 'start_date',  $group ) ? $group['start_date'] : '',
+        array_key_exists( 'end_date',  $group )   ? $group['end_date'] : '',
+        array_key_exists( 'template',  $group )   ? $group['template'] : ''
+      );
     }
   }
 
