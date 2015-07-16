@@ -12,7 +12,7 @@ class General_Admin extends Base_Registrar {
   protected $panels = array();
 
   public function __construct( $version ) {
-    parent::__construct( 'gios-general-admin', $version );
+    parent::__construct( 'gios-newsletter-general-admin', $version );
 
     $this->load_dependencies();
     $this->define_hooks();
