@@ -1,6 +1,27 @@
 jQuery( function ( $ ) {
     var $lastButtonClicked;
 
+    $.fn.isRequired = function ( customValidator, invalidCallback ) {
+      var value = this.val();
+      var valid = false;
+
+      this.attr( 'data-required', true );
+
+      if ( customValidator ) {
+        valid = customValidator( value );
+      } else {
+        valid = value !== '' ? true : false;
+      }
+
+      if ( ! valid ) {
+        if ( invalidCallback ) {
+          invalidCallback( this );
+        }
+      }
+
+      return this;
+    }
+
     /**
      * Map and reduce the pills for their delicious data
      */
@@ -37,6 +58,13 @@ jQuery( function ( $ ) {
      */
     $( '#newsletter-display-data form' ).submit(function routeFormSubmission( e ) {
       var route, limit = -1, title = false, tags = false, categories = false, start_date = false, end_date = false, template = false;
+      var hasError = false, errorMessage = '';
+      var invalidCallback = function ( e ) {
+        hasError = true;
+        errorMessage = "Please fill out all required fields";
+
+        e.css( 'border-color', 'red' );
+      }
 
       e.preventDefault();
 
@@ -47,13 +75,13 @@ jQuery( function ( $ ) {
       }
 
       // Title
-      title = $('#title').val();
+      title = $('#title').isRequired( null, invalidCallback ).val();
 
       // Tags
       tags = get_pill_data( $('#tags-pills-id .pill') );
 
       // Categories
-      categories = $('#categories-id').val();
+      categories = $('#categories-id').isRequired( null, invalidCallback ).val();
 
       // start date
       start_date = $('#start-date-datepicker').val();
@@ -65,7 +93,15 @@ jQuery( function ( $ ) {
       template = $('#template-id').val();
 
       // template
-      limit = $('#limit-id').val();
+      limit = $('#limit-id').isRequired( null, invalidCallback ).val();
+
+
+      if ( hasError ) {
+        $('.form-table').before( '<p style="color: red" class="error-message">' + errorMessage + '</p>' );
+        return;
+      } else {
+        $('.error-message').remove();
+      }
 
       if ( route === 'download' || route === 'generate' ) {
         var url = window.url;
