@@ -16,6 +16,12 @@ The plugin will take the posts and display them in an email-friendly page.
 
 We are purposely tracking the vendor folder.
 
+<center>
+### HEADS UP
+#### You MUST run `composer install` when you install the plugin.
+</center>
+
+
 # Admin Panel
 
 The admin panel will be used to generate emails based on different criteria:
