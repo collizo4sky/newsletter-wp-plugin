@@ -120,6 +120,26 @@ function generate_data( $title, $posts ) {
       $post->post_excerpt = $post_more;
     }
 
+    // Run shortcodes on the excerpt
+    // Most likely do not need to ob_start
+    // But useful in case WordPress tries to print something out
+    ob_start();
+    setup_postdata( $post );
+
+    $excerpt = $post->post_excerpt;
+
+    if ( empty( $excerpt ) ) {
+      if ( empty( $excerpt = get_the_excerpt() ) ) {
+        $post_more = explode( '<!--more-->', $post->post_content )[0];
+        $post_more = strip_only( nl2br( $post_more ), 'img', true );
+        $excerpt   = $post_more;
+      }
+    }
+
+    $post->post_excerpt = do_shortcode( $excerpt );
+    ob_end_clean();
+
+
     // Get image
     $images = get_images_from_post( $post );
 
@@ -136,6 +156,7 @@ function generate_data( $title, $posts ) {
       $post->source = get_permalink( $post->ID );
     }
   }
+  wp_reset_postdata();
 
   return $data;
 }
