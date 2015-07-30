@@ -14,8 +14,6 @@ dependent on tags, categories, and sort order passed to it.
 
 The plugin will take the posts and display them in an email-friendly page.
 
-We are purposely tracking the vendor folder.
-
 <center>
 ### HEADS UP
 #### You MUST run `composer install` when you install the plugin.
@@ -31,14 +29,16 @@ The admin panel will be used to generate emails based on different criteria:
 * And is in the given `date range`.
 * Using the given `email template`.
 
-These queries can be saved for reuse. 
-
 Emails generated from these queries can be viewed or downloaded.
 
-* https://github.com/twitter/typeahead.js
-* https://github.com/dbushell/Pikaday
+# 3rd Party Code
+
+* Typeahead by Twitter: https://github.com/twitter/typeahead.js
+* Pikaday Date Picker: https://github.com/dbushell/Pikaday
 
 # Email Generation
+
+When an email is generated, we use emogrifier to inline CSS and SCSS to transform SCSS to CSS:
 
 * https://github.com/jjriv/emogrifier
 * http://leafo.net/scssphp/docs
