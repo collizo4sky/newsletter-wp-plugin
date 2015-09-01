@@ -44,7 +44,7 @@ class General_Admin extends Base_Registrar {
   public function admin_menu() {
     $page_title = 'Newsletter Settings';
     $menu_title = 'Newsletter';
-    $capability = 'administrator';
+    $capability = 'publish_posts';
     $path = plugin_dir_url( __FILE__ );
     add_menu_page(
         $page_title,
