@@ -150,7 +150,9 @@ function generate_data( $title, $posts ) {
     }
 
     // Get Source URL
-    if ( array_key_exists( 'SourceURL', $meta ) && $meta['SourceURL'][0] ) {
+    if ( array_key_exists( 'RedirectURL', $meta ) && $meta['RedirectURL'][0] ) {
+      $post->source = $meta['RedirectURL'][0];
+    } else if ( array_key_exists( 'SourceURL', $meta ) && $meta['SourceURL'][0] ) {
       $post->source = $meta['SourceURL'][0];
     } else {
       $post->source = get_permalink( $post->ID );
