@@ -153,7 +153,7 @@ function generate_data( $title, $posts ) {
     if ( array_key_exists( 'RedirectURL', $meta ) && $meta['RedirectURL'][0] ) {
       $post->source = $meta['RedirectURL'][0];
     } else {
-      $post->source = get_permalink( $post->ID );
+      $post->source = 'https://sustainability.asu.edu/news/archive/' . $post->post_name . '/';
     }
   }
   wp_reset_postdata();
