@@ -168,6 +168,8 @@ $post_options = array(
   'posts_per_page' => -1, // Show all posts
   'post_status'    => 'publish',
   'post_type'      => 'post',
+  'orderby'        => 'menu_order',
+  'order'          => 'ASC',
 );
 
 $download   = get_parameter( 'download', false );
