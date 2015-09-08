@@ -1,7 +1,8 @@
 Newsletter WordPress Plugin
 ===========================
 
-Version 1
+### HEADS UP
+#### You MUST run `composer install` when you install the plugin.
 
 The first version of this plugin aims to provide newsletter functionality
 for the Julie Ann Wrigley Global Institute of Sustainability. Specifically
@@ -14,11 +15,9 @@ dependent on tags, categories, and sort order passed to it.
 
 The plugin will take the posts and display them in an email-friendly page.
 
-<center>
-### HEADS UP
-#### You MUST run `composer install` when you install the plugin.
-</center>
+Post Custom Attributes are used to store meta data, such as:
 
+* `RedirectUrl` - Set the path of the link that is displayed on the newsletter for the post. Otherwise, defaults to the `sustainability.asu.edu` news post.
 
 # Admin Panel
 
