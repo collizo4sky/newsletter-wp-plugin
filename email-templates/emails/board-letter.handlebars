@@ -18,7 +18,11 @@ body {
   line-height: normal;
   text-align: left;
   color:#506570;
-} 
+}
+
+body p {
+  font-family:'Gill Sans / Gill Sans MT', 'Gill Sans MT', Verdana, Arial, Geneva, sans-serif;
+}
 
 a {
   color: #990033;
@@ -80,13 +84,12 @@ h1, h2, p, div {
               </td>
 
               <td style="padding-top:15px; padding-right:15px; padding-bottom:15px;">
-
                 <p style="font-family:'Gill Sans / Gill Sans MT', 'Gill Sans MT', Verdana, Arial, Geneva, sans-serif; font-weight:normal; line-height:normal; font-size:19px; color:#990033; margin: 0 0 5px 0; padding: 0;text-decoration:none;"><a target="_blank" href="{{source}}" style="font-family:'Gill Sans / Gill Sans MT', 'Gill Sans MT', Verdana, Arial, Geneva, sans-serif; font-weight:normal; line-height:normal;   color:#990033; margin: 0 0 0 0; padding: 0;text-decoration:none;">{{post_title}}</a>
                 </p>
 
                 <p style="font-family:'Gill Sans / Gill Sans MT', 'Gill Sans MT', Verdana, Arial, Geneva, sans-serif; text-align: left; color:#506570; font-style:normal; color:#506570;   line-height:normal; font-weight:normal;margin:0; padding:0; font-size:15px;">
-                  <p>{{{post_excerpt}}}</p>
-                  <a target="_blank" href="{{source}}">Read more &raquo;</a>
+                  {{{post_excerpt}}}
+                  <a style="font-family:'Gill Sans / Gill Sans MT', 'Gill Sans MT', Verdana, Arial, Geneva, sans-serif;" target="_blank" href="{{source}}">Read more &raquo;</a>
                 </p>
 
               </td>
