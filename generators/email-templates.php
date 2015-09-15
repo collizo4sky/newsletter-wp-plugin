@@ -251,6 +251,7 @@ try {
 
 // Step 3. Inline CSS into compiled template
 $emogrifier = new \Pelago\Emogrifier( $compiled, $css );
+$emogrifier->disableStyleBlocksParsing();
 $html       = $emogrifier->emogrify();
 
 if ( $download === 'true' ) {
