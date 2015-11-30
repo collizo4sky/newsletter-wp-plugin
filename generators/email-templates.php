@@ -53,7 +53,7 @@ function get_content_image( $post ) {
   // " (abc)capture group \1 backreference to group #1
   preg_match_all( '/(?<!_)src=([\'"])?(.*?)\\1/', $content, $pics );
   if ( ! empty( $pics[2] ) ) {
-    if ( parse_url( $pics[2][0], PHP_URL_SCHEME ) == '' ) {
+    if ( parse_url( $pics[2][0], PHP_URL_SCHEME ) == '' && substr( $page_feature_image, 0, strlen('//')) !== '//' ) {
       $pics[2][0] = home_url( $pics[2][0] );
     }
     return $pics[2][0];
