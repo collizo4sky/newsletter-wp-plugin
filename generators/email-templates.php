@@ -146,7 +146,7 @@ function generate_data( $title, $posts ) {
     if ( count( $images ) > 0 ) {
       $post->image = $images[0];
     } else {
-      $noimage = plugins_url( 'images/noimage.jpg', dirname(__FILE__) );
+      $noimage = plugins_url( 'images/noimage.png', dirname(__FILE__) );
       $post->image = $noimage;
     }
 
