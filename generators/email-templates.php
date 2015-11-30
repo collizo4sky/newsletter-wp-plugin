@@ -202,7 +202,7 @@ if ( false !== $tags ) {
   $post_options['tag'] = $tags;
 }
 
-if ( false !== $categories ) {
+if ( false !== $categories && $categories !== 'no-category' ) {
   $post_options['category_name'] = $categories;
 }
 
