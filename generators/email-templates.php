@@ -70,7 +70,7 @@ function get_page_feature_image( $post ) {
   );
 
   if ( ! empty( $page_feature_image ) ) {
-    if ( parse_url( $page_feature_image, PHP_URL_SCHEME ) == '' ) {
+    if ( parse_url( $page_feature_image, PHP_URL_SCHEME ) == '' && substr( $page_feature_image, 0, strlen('//')) !== '//' ) {
       $page_feature_image = home_url( $page_feature_image );
     }
     
