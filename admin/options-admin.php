@@ -150,7 +150,7 @@ class Options_Admin extends Base_Registrar {
     $categories = get_categories();
 
     $html = '<select name="categories" id="categories-id">';
-
+    $html .= '<options value="no-category"></option>';
     if ( is_array( $categories ) && count( $categories ) > 0 ) {
       $first = true;
       foreach ( $categories as $category ) {
