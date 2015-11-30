@@ -146,7 +146,8 @@ function generate_data( $title, $posts ) {
     if ( count( $images ) > 0 ) {
       $post->image = $images[0];
     } else {
-      $post->image = '/images/noimage.jpg'; // TODO better noimage
+      $noimage = plugins_url( 'images/noimage.jpg', dirname(__FILE__) );
+      $post->image = $noimage;
     }
 
     // Get Source URL
