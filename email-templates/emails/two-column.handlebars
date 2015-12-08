@@ -62,13 +62,16 @@
                       <tr class="content__inner">
                         <td>
                           <table class="content__card">
-                            <tr>
-                              <td>
-                                <a target="_blank" href="{{source}}">
-                                  <img width="280" src="{{image}}">
-                                </a>
-                              </td>
-                            </tr>
+                            {{#if has_no_image}}
+                            {{else}}
+                              <tr>
+                                <td>
+                                  <a target="_blank" href="{{source}}">
+                                    <img width="280" src="{{image}}">
+                                  </a>
+                                </td>
+                              </tr>
+                            {{/if}}
                             <tr>
                               <td class="content__card-text">
                                 <p class="content__card-text--heading">{{{post_title}}}</p>
