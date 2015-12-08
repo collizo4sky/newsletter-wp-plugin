@@ -106,6 +106,8 @@ function get_images_from_post( $post ) {
 
 function generate_data( $title, $posts ) {
   $data = array(
+      'site_url' => plugins_url( '', dirname(__FILE__) ),
+      'no_image_url' => plugins_url( 'images/noimage.png', dirname(__FILE__) ),
       'title' => $title,
       'posts' => $posts
   );
@@ -237,6 +239,23 @@ $css  = $scss->compile('@import "main.scss"');
 $template_path =  __DIR__ . '/../email-templates/emails/';
 
 try {
+  $get_real_value = function( $value, $context ) {
+    if ( $value instanceof \Handlebars\StringWrapper ) {
+      return $get_real_value( '' . $value, $context );
+    } else if ( array_key_exists( $value, $context ) ) {
+      return $context[ $value ];
+    } else {
+      // Now string to real type
+      if ( is_numeric( $value ) ) {
+        return $value + 0;
+      } else if ( in_array( $value, [ 'true', 'false' ] ) ) {
+        return ( 'true' === $value ? true : false );
+      } else {
+        return $value;
+      }
+    }
+  };
+
   $engine = new Handlebars(
       array(
         'loader' => new \Handlebars\Loader\FilesystemLoader( $template_path ),
@@ -244,9 +263,27 @@ try {
       )
   );
 
+  $engine->addHelper('is_odd', function ( $template, $context, $args ) use ( $engine, $get_real_value ) {
+    $index = $context->get( '@index' );
+    if ( $index % 2 === 1 ) {
+      $template->setStopToken( 'else' );
+      $buffer = $template->render( $template, $context, array(), true );
+      $template->setStopToken( false );
+      $template->discard( $context );
+    } else {
+      $template->setStopToken( 'else' );
+      $template->discard( $context );
+      $template->setStopToken( false );
+      $buffer = $template->render( $template, $context, array(), true );
+    }
+    return $buffer;
+  });
+
   $compiled = $engine->render( $template, $data );
 } catch (Exception $e) {
   echo 'Could not find template.';
+
+  var_dump($e);
   die();
 }
 
