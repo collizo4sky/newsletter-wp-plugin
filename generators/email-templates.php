@@ -150,6 +150,7 @@ function generate_data( $title, $posts ) {
     } else {
       $noimage = plugins_url( 'images/noimage.png', dirname(__FILE__) );
       $post->image = $noimage;
+      $post->has_no_image = true;
     }
 
     // Get Source URL
