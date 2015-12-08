@@ -1,0 +1,112 @@
+<html class="two-column">
+<head>
+</head>
+
+<body>
+<table class="outer-wrap">
+  <tr>
+    <td>
+      <table class="header">
+        <tr class="header__preheader">
+          <td>
+            <p>{{title}}</p>    
+          </td>
+        </tr>
+        <tr class="header__wrap">
+          <td>
+            <table class="header__wrap-inner">
+              <tr>
+                <td align="center">
+                  <a href="http://sustainability.asu.edu/" target="_blank" title="ASU's Global Institute of Sustainability">
+                    <img alt="Julie Ann Wrigley Global Institute of Sustainability" title="Julie Ann Wrigley Global Institute of Sustainability" src="http://sustainability.asu.edu/docs/gios/events/img/logo-bl.jpg" border="0" width="" height="" />
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="header__title">
+          <td>
+            <table class="header__title-inner">
+              <tr>
+                <td align="center">
+                  <p class="header__title-text">
+                    {{title}}
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr class="spacing">
+    <td>
+      <img height="32" alt="" src="{{no_image_url}}">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table class="content" align="center">
+        <tr>
+          <td>  
+            <table>
+              <tr>
+                <td valign="top">
+                  {{#each posts}}
+                    <table
+                        width="280"
+                        class="content__post--{{#is_odd}}odd{{else}}even{{/is_odd}}"
+                        {{#is_odd}}align="right"{{else}}align="left"{{/is_odd}}>
+                      <tr class="content__inner">
+                        <td>
+                          <table class="content__card">
+                            <tr>
+                              <td>
+                                <a target="_blank" href="{{source}}">
+                                  <img width="280" src="{{image}}">
+                                </a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="content__card-text">
+                                <p class="content__card-text--heading">{{{post_title}}}</p>
+                                {{{post_excerpt}}}
+                                <p>
+                                  <a target="_blank" href="{{source}}">read more &raquo;</a>
+                                </p>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+
+                    {{#is_odd}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td valign="top">
+                    {{else}}
+                      </td>
+                      <td width="22">
+                        <p class="content__spacing">
+                          &nbsp;
+                        </p>
+                      </td>
+                      <td valign="top">
+                    {{/is_odd}}
+                  {{/each}}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
