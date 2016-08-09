@@ -106,7 +106,7 @@ table, table tr, table td {
     &,
     p {
       /* line height using percentages because of accessibility */
-      line-height: 125%;
+      line-height: normal;
       font-family: Helvetica, Arial, sans-serif;
     }
   }
