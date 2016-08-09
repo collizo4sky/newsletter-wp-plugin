@@ -224,26 +224,27 @@ class Options_Admin extends Base_Registrar {
       $placeholder_text = 'Select a ' . $name;
     }
 
-    echo '<input class="regular-text" type="text" name="' . $name . '" id="' . $name . '-id" placeholder="' . $placeholder_text . '"/>';
+    echo '<em>Start typing the tag name, choose the tag from the auto complete and then click the button to actually add it to your newsletter.</em><br/>
+    <input class="regular-text" type="text" name="' . $name . '" id="' . $name . '-id" placeholder="' . $placeholder_text . '"/>';
 
     if ( ! $no_pills ) {
-      echo '<button class="button" id="' . $name . '-button-id">+</button>';
-      echo '<div id="' . $name . '-pills-id" class="pills"></div>';  
+      echo '<button class="button" id="' . $name . '-button-id">Use this Tag</button>';
+      echo '<div id="' . $name . '-pills-id" class="pills"></div>';
     }
-    
+
     $js = <<<JAVASCRIPT
       +function () {
         jQuery(function ($) {
           var substringMatcher = function (strs) {
             return function findMatches(q, cb) {
               var matches, substringRegex;
-           
+
               // an array that will be populated with substring matches
               matches = [];
-           
+
               // regex used to determine if a string contains the substring `q`
               substrRegex = new RegExp(q, 'i');
-           
+
               // iterate through the pool of strings and for any string that
               // contains the substring `q`, add it to the `matches` array
               $.each(strs, function(i, str) {
