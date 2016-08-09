@@ -131,7 +131,7 @@ class Options_Admin extends Base_Registrar {
         $filtered_tags .= '{';
         $filtered_tags .= '"term_id" : "' . $tags[ $i ]->term_id . '",';
         $filtered_tags .= '"term_slug" : "' . $tags[ $i ]->slug . '",';
-        $filtered_tags .= '"name" : "' . $tags[ $i ]->name . '"';       
+        $filtered_tags .= '"name" : "' . $tags[ $i ]->name . '"';
         $filtered_tags .= '}';
       }
     }
@@ -143,7 +143,7 @@ class Options_Admin extends Base_Registrar {
 
   /**
    * Print the category section.
-   * 
+   *
    * This will print out a select dropdown of all the categories
    */
   public function newsletter_category_callback() {
@@ -161,7 +161,7 @@ class Options_Admin extends Base_Registrar {
         $first = false;
 
         $data_attribute = ' data-id="' . $category->term_id . '" ';
-        
+
         $html .= '<option value="' . $category->slug . '" ' . $selected . $data_attribute. '>' . $category->name . '</option>';
       }
     }
@@ -170,7 +170,7 @@ class Options_Admin extends Base_Registrar {
 
     print $html;
   }
-  
+
   public function newsletter_start_date_callback() {
     print '<input type="text" id="start-date-datepicker">';
     print '<script>
@@ -198,7 +198,7 @@ class Options_Admin extends Base_Registrar {
         $selected .= ' selected="selected" ';
       }
       $first = false;
-      
+
       $html .= '<option value="' . $template_name . '" ' . $selected . '>' . $template_name . '</option>';
     }
 
@@ -224,26 +224,27 @@ class Options_Admin extends Base_Registrar {
       $placeholder_text = 'Select a ' . $name;
     }
 
-    echo '<input class="regular-text" type="text" name="' . $name . '" id="' . $name . '-id" placeholder="' . $placeholder_text . '"/>';
+    echo '<em>Start typing the tag name, choose the tag from the auto complete and then click the button to actually add it to your newsletter.</em><br/>
+    <input class="regular-text" type="text" name="' . $name . '" id="' . $name . '-id" placeholder="' . $placeholder_text . '"/>';
 
     if ( ! $no_pills ) {
-      echo '<button class="button" id="' . $name . '-button-id">+</button>';
-      echo '<div id="' . $name . '-pills-id" class="pills"></div>';  
+      echo '<button class="button" id="' . $name . '-button-id">Use this Tag</button>';
+      echo '<div id="' . $name . '-pills-id" class="pills"></div>';
     }
-    
+
     $js = <<<JAVASCRIPT
       +function () {
         jQuery(function ($) {
           var substringMatcher = function (strs) {
             return function findMatches(q, cb) {
               var matches, substringRegex;
-           
+
               // an array that will be populated with substring matches
               matches = [];
-           
+
               // regex used to determine if a string contains the substring `q`
               substrRegex = new RegExp(q, 'i');
-           
+
               // iterate through the pool of strings and for any string that
               // contains the substring `q`, add it to the `matches` array
               $.each(strs, function(i, str) {
@@ -251,7 +252,7 @@ class Options_Admin extends Base_Registrar {
                   matches.push(str);
                 }
               });
-           
+
               cb(matches);
             };
           }
