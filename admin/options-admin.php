@@ -131,7 +131,7 @@ class Options_Admin extends Base_Registrar {
         $filtered_tags .= '{';
         $filtered_tags .= '"term_id" : "' . $tags[ $i ]->term_id . '",';
         $filtered_tags .= '"term_slug" : "' . $tags[ $i ]->slug . '",';
-        $filtered_tags .= '"name" : "' . $tags[ $i ]->name . '"';       
+        $filtered_tags .= '"name" : "' . $tags[ $i ]->name . '"';
         $filtered_tags .= '}';
       }
     }
@@ -143,7 +143,7 @@ class Options_Admin extends Base_Registrar {
 
   /**
    * Print the category section.
-   * 
+   *
    * This will print out a select dropdown of all the categories
    */
   public function newsletter_category_callback() {
@@ -161,7 +161,7 @@ class Options_Admin extends Base_Registrar {
         $first = false;
 
         $data_attribute = ' data-id="' . $category->term_id . '" ';
-        
+
         $html .= '<option value="' . $category->slug . '" ' . $selected . $data_attribute. '>' . $category->name . '</option>';
       }
     }
@@ -170,7 +170,7 @@ class Options_Admin extends Base_Registrar {
 
     print $html;
   }
-  
+
   public function newsletter_start_date_callback() {
     print '<input type="text" id="start-date-datepicker">';
     print '<script>
@@ -198,7 +198,7 @@ class Options_Admin extends Base_Registrar {
         $selected .= ' selected="selected" ';
       }
       $first = false;
-      
+
       $html .= '<option value="' . $template_name . '" ' . $selected . '>' . $template_name . '</option>';
     }
 
@@ -252,7 +252,7 @@ class Options_Admin extends Base_Registrar {
                   matches.push(str);
                 }
               });
-           
+
               cb(matches);
             };
           }
