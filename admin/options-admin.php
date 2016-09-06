@@ -205,6 +205,41 @@ class Options_Admin extends Base_Registrar {
     $html .= '</select>';
 
     print $html;
+
+    # Script to change preview of template image.
+    $previewImagePath = plugins_url().'/newsletter-wp-plugin/admin/images/';
+    $js = <<<JAVASCRIPT
+    function updatePreview(){
+      var test = "$previewImagePath";
+      var input = document.getElementById('template-id').value;
+      var imagePath = "$previewImagePath"+input+"-template.jpg";
+      document.getElementById('template-preview').src=imagePath;
+    };
+
+JAVASCRIPT;
+    print '<script type="text/javascript">' . $js . '</script>';
+
+    # Script to enlarge preview image on click.
+    $js = <<<JAVASCRIPT
+    function scaleImage() {
+      var img = document.getElementById('template-preview');
+      // Original height="146" width="251"
+      var width = img.clientWidth;
+      var height = img.clientHeight;
+      if(width == 251 && height == 146){
+        document.getElementById('template-preview').style.width="502px";
+        document.getElementById('template-preview').style.height="292px";
+      }
+      else{
+        document.getElementById('template-preview').style.width="251px";
+        document.getElementById('template-preview').style.height="146px";
+      }
+    }
+
+JAVASCRIPT;
+    print '<script type="text/javascript">' . $js . '</script>';
+
+
   }
 
   public function form_submit( $input ) {
