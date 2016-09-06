@@ -186,9 +186,13 @@ class Options_Admin extends Base_Registrar {
   }
 
   public function newsletter_template_callback() {
+
+    $previewImagePath = plugins_url().'/newsletter-wp-plugin/email-templates/preview-images/';
     $html  = '<select name="template" id="template-id">';
     $first = true;
 
+    // This variable holds the name of the template which is selected on page load.
+    $defaultTemplatePreview = "";
     foreach ( glob( dirname( __FILE__ )  . '/../email-templates/emails/*.handlebars', GLOB_BRACE ) as $filename ) {
       $parts = explode( '.', basename( $filename ) );
       $template_name = $parts[0];
@@ -196,6 +200,7 @@ class Options_Admin extends Base_Registrar {
 
       if ( $first === true ) {
         $selected .= ' selected="selected" ';
+        $defaultTemplatePreview = $parts[0];
       }
       $first = false;
 
@@ -203,16 +208,18 @@ class Options_Admin extends Base_Registrar {
     }
 
     $html .= '</select>';
+    $html .= '</br></br>';
+    $html .= '<img id="template-preview" src="'.$previewImagePath.$defaultTemplatePreview.'-template.png" height="146" width="251" onclick="scaleImage()"/>';
 
     print $html;
 
     # Script to change preview of template image.
-    $previewImagePath = plugins_url().'/newsletter-wp-plugin/admin/images/';
+    $previewImagePath = plugins_url().'/newsletter-wp-plugin/email-templates/preview-images/';
     $js = <<<JAVASCRIPT
     function updatePreview(){
       var test = "$previewImagePath";
       var input = document.getElementById('template-id').value;
-      var imagePath = "$previewImagePath"+input+"-template.jpg";
+      var imagePath = "$previewImagePath"+input+"-template.png";
       document.getElementById('template-preview').src=imagePath;
     };
 
