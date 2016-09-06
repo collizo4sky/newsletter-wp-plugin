@@ -178,17 +178,10 @@ class Options_Admin extends Base_Registrar {
     </script>';
   }
 
-  public function newsletter_end_date_callback() {
-    print '<input type="text" id="end-date-datepicker">';
-    print '<script>
-      jQuery(function($) { new Pikaday({ field: document.getElementById("end-date-datepicker") }) });
-    </script>';
-  }
-
   public function newsletter_template_callback() {
 
     $previewImagePath = plugins_url().'/newsletter-wp-plugin/email-templates/preview-images/';
-    $html  = '<select name="template" id="template-id">';
+    $html  = '<select name="template" id="template-id" onchange="updatePreview()">';
     $first = true;
 
     // This variable holds the name of the template which is selected on page load.
@@ -213,7 +206,7 @@ class Options_Admin extends Base_Registrar {
 
     print $html;
 
-    # Script to change preview of template image.
+    # Script to change preview of template image and enlarge preview image on click.
     $previewImagePath = plugins_url().'/newsletter-wp-plugin/email-templates/preview-images/';
     $js = <<<JAVASCRIPT
     function updatePreview(){
@@ -221,13 +214,8 @@ class Options_Admin extends Base_Registrar {
       var input = document.getElementById('template-id').value;
       var imagePath = "$previewImagePath"+input+"-template.png";
       document.getElementById('template-preview').src=imagePath;
-    };
+    }
 
-JAVASCRIPT;
-    print '<script type="text/javascript">' . $js . '</script>';
-
-    # Script to enlarge preview image on click.
-    $js = <<<JAVASCRIPT
     function scaleImage() {
       var img = document.getElementById('template-preview');
       // Original height="146" width="251"
@@ -246,8 +234,7 @@ JAVASCRIPT;
 JAVASCRIPT;
     print '<script type="text/javascript">' . $js . '</script>';
 
-
-  }
+}
 
   public function form_submit( $input ) {
     // TODO filter and make sure the newsletter categories are valid
