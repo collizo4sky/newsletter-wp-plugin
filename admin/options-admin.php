@@ -186,9 +186,13 @@ class Options_Admin extends Base_Registrar {
   }
 
   public function newsletter_template_callback() {
-    $html  = '<select name="template" id="template-id">';
+
+    $previewImagePath = plugins_url().'/newsletter-wp-plugin/email-templates/preview-images/';
+    $html  = '<select name="template" id="template-id" onchange="updatePreview()">';
     $first = true;
 
+    // This variable holds the name of the template which is selected on page load.
+    $defaultTemplatePreview = "";
     foreach ( glob( dirname( __FILE__ )  . '/../email-templates/emails/*.handlebars', GLOB_BRACE ) as $filename ) {
       $parts = explode( '.', basename( $filename ) );
       $template_name = $parts[0];
@@ -196,6 +200,7 @@ class Options_Admin extends Base_Registrar {
 
       if ( $first === true ) {
         $selected .= ' selected="selected" ';
+        $defaultTemplatePreview = $parts[0];
       }
       $first = false;
 
@@ -203,9 +208,40 @@ class Options_Admin extends Base_Registrar {
     }
 
     $html .= '</select>';
+    $html .= '</br></br>';
+    $html .= '<img id="template-preview" src="'.$previewImagePath.$defaultTemplatePreview.'-template.png" height="146" width="251" onclick="scaleImage()"/>';
 
     print $html;
-  }
+
+    # Script to change preview of template image and enlarge preview image on click.
+    $previewImagePath = plugins_url().'/newsletter-wp-plugin/email-templates/preview-images/';
+    $js = <<<JAVASCRIPT
+    function updatePreview(){
+      var test = "$previewImagePath";
+      var input = document.getElementById('template-id').value;
+      var imagePath = "$previewImagePath"+input+"-template.png";
+      document.getElementById('template-preview').src=imagePath;
+    }
+
+    function scaleImage() {
+      var img = document.getElementById('template-preview');
+      // Original height="146" width="251"
+      var width = img.clientWidth;
+      var height = img.clientHeight;
+      if(width == 251 && height == 146){
+        document.getElementById('template-preview').style.width="502px";
+        document.getElementById('template-preview').style.height="292px";
+      }
+      else{
+        document.getElementById('template-preview').style.width="251px";
+        document.getElementById('template-preview').style.height="146px";
+      }
+    }
+
+JAVASCRIPT;
+    print '<script type="text/javascript">' . $js . '</script>';
+
+}
 
   public function form_submit( $input ) {
     // TODO filter and make sure the newsletter categories are valid
