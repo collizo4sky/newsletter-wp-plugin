@@ -4,9 +4,80 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
+
 --
 -- Database: `wordpress_test`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wp_postmeta`
+--
+
+CREATE TABLE IF NOT EXISTS `wp_postmeta` (
+`meta_id` bigint(20) unsigned NOT NULL,
+  `post_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `meta_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_value` longtext COLLATE utf8mb4_unicode_ci
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wp_posts`
+--
+
+CREATE TABLE IF NOT EXISTS `wp_posts` (
+`ID` bigint(20) unsigned NOT NULL,
+  `post_author` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `post_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `post_date_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `post_content` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `post_title` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `post_excerpt` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `post_status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'publish',
+  `comment_status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'open',
+  `ping_status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'open',
+  `post_password` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `post_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `to_ping` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pinged` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `post_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `post_modified_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `post_content_filtered` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `post_parent` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `guid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `menu_order` int(11) NOT NULL DEFAULT '0',
+  `post_type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'post',
+  `post_mime_type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `comment_count` bigint(20) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=13986 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wp_terms`
+--
+
+CREATE TABLE IF NOT EXISTS `wp_terms` (
+`term_id` bigint(20) unsigned NOT NULL,
+  `name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `slug` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `term_group` bigint(10) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wp_term_relationships`
+--
+
+CREATE TABLE IF NOT EXISTS `wp_term_relationships` (
+  `object_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `term_taxonomy_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `term_order` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 --
@@ -243,4 +314,52 @@ INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_orde
 (13985, 11, 0),
 (13985, 14, 0);
 
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `wp_postmeta`
+--
+ALTER TABLE `wp_postmeta`
+ ADD PRIMARY KEY (`meta_id`), ADD KEY `post_id` (`post_id`), ADD KEY `meta_key` (`meta_key`(191));
+
+--
+-- Indexes for table `wp_posts`
+--
+ALTER TABLE `wp_posts`
+ ADD PRIMARY KEY (`ID`), ADD KEY `post_name` (`post_name`(191)), ADD KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`ID`), ADD KEY `post_parent` (`post_parent`), ADD KEY `post_author` (`post_author`);
+
+--
+-- Indexes for table `wp_terms`
+--
+ALTER TABLE `wp_terms`
+ ADD PRIMARY KEY (`term_id`), ADD KEY `slug` (`slug`(191)), ADD KEY `name` (`name`(191));
+
+--
+-- Indexes for table `wp_term_relationships`
+--
+ALTER TABLE `wp_term_relationships`
+ ADD PRIMARY KEY (`object_id`,`term_taxonomy_id`), ADD KEY `term_taxonomy_id` (`term_taxonomy_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `wp_postmeta`
+--
+ALTER TABLE `wp_postmeta`
+MODIFY `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=80;
+--
+-- AUTO_INCREMENT for table `wp_posts`
+--
+ALTER TABLE `wp_posts`
+MODIFY `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13986;
+--
+-- AUTO_INCREMENT for table `wp_terms`
+--
+ALTER TABLE `wp_terms`
+MODIFY `term_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 
