@@ -5,5 +5,10 @@
     "leafo/scssphp": "0.0.12",
     "xamin/handlebars.php": "dev-master",
     "pelago/emogrifier": "@dev"
+  },
+  "require-dev" : {
+      "squizlabs/php_codesniffer": "2.6.*",
+      "phpunit/phpunit": "4.8.*",
+      "satooshi/php-coveralls": ">=0.6"
   }
 }
