@@ -1,5 +1,6 @@
 Newsletter WordPress Plugin
 ===========================
+[![Build Status](https://travis-ci.org/gios-asu/newsletter-wp-plugin.svg?branch=master)](https://travis-ci.org/gios-asu/newsletter-wp-plugin)
 
 ### HEADS UP
 #### You MUST run `composer install` when you install the plugin.
