@@ -178,6 +178,13 @@ class Options_Admin extends Base_Registrar {
     </script>';
   }
 
+  public function newsletter_end_date_callback() {
+    print '<input type="text" id="end-date-datepicker">';
+    print '<script>
+      jQuery(function($) { new Pikaday({ field: document.getElementById("end-date-datepicker") }) });
+    </script>';
+  }
+
   public function newsletter_template_callback() {
 
     $previewImagePath = plugins_url().'/newsletter-wp-plugin/email-templates/preview-images/';
