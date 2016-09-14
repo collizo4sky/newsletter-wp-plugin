@@ -5,8 +5,8 @@
  */
 define('WP_USE_THEMES', false);
 
-require '../../../../wp-blog-header.php';
-require_once '../vendor/autoload.php';
+require (dirname(__FILE__)).'/../../../../wp-blog-header.php';
+require_once (dirname(__FILE__)).'/../vendor/autoload.php';
 
 use Handlebars\Handlebars;
 
@@ -19,22 +19,22 @@ function get_parameter( $name, $default ) {
 }
 
 function strip_only( $html, $html_tags, $strip_content = false ) {
-  $content = ''; 
-  if( ! is_array( $html_tags ) ) { 
-    $html_tags = ( strpos( $html, '>' ) !== false ? explode( '>', str_replace( '<', '', $html_tags ) ) : array( $html_tags ) ); 
+  $content = '';
+  if( ! is_array( $html_tags ) ) {
+    $html_tags = ( strpos( $html, '>' ) !== false ? explode( '>', str_replace( '<', '', $html_tags ) ) : array( $html_tags ) );
     if ( end( $html_tags ) == '' ) {
-      array_pop( $html_tags ); 
+      array_pop( $html_tags );
     }
   }
 
-  foreach ( $html_tags as $tag ) { 
+  foreach ( $html_tags as $tag ) {
     if ( $strip_content ) {
       $content = '(.+</'. $tag .'[^>]*>|)';
     }
-    $html = preg_replace( '#</?'.$tag.'[^>]*>' . $content . '#is', '', $html ); 
+    $html = preg_replace( '#</?'.$tag.'[^>]*>' . $content . '#is', '', $html );
   }
 
-  return $html; 
+  return $html;
 }
 
 function get_attached_image( $post ) {
@@ -73,7 +73,7 @@ function get_page_feature_image( $post ) {
     if ( parse_url( $page_feature_image, PHP_URL_SCHEME ) == '' && substr( $page_feature_image, 0, strlen('//')) !== '//' ) {
       $page_feature_image = home_url( $page_feature_image );
     }
-    
+
     return $page_feature_image;
   }
 

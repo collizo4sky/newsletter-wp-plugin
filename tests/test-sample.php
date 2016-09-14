@@ -8,11 +8,44 @@
 /**
  * Sample test case.
  */
-class SampleTest extends WP_UnitTestCase {
+
+class SampleTest extends \WP_UnitTestCase {
 
 	/**
 	 * A single example test.
 	 */
+
+
+	 function test_email_template() {
+
+		 //call email-templates.php and pass parameters to generate the output in buffer
+
+		 ob_start();
+
+		 // SET the parameters that are required by the email-templates.php file to generate the template.
+		 $_GET['download'] = false;
+		 $_GET['title'] = 'NewsLetter September 2016';
+		 $_GET['tags'] = false;
+		 $_GET['categories'] = 'board-letter';
+		 $_GET['start_date'] = false;
+		 $_GET['end_date'] = false;
+		 $_GET['template'] = 'board-letter';
+		 $_GET['limit'] = '5';
+
+		 // Call email-templates.php
+		 include ('/home/aduttaro/gios-vagrant/working_dir/html/wordpress/wp-content/plugins/newsletter-wp-plugin/generators/email-templates.php');
+
+		 // Capture the output from the buffer.
+		 $output = ob_get_contents();
+
+		 // Sample test to check the output is captured or not.
+		 if($output){
+			 $this->assertTrue(True);
+		 }
+
+		 ob_end_clean();
+	 }
+
 	function test_title() {
 		// This code checks for the presense of title in the web page.
 
@@ -22,6 +55,8 @@ class SampleTest extends WP_UnitTestCase {
 
 		$url_parse = parse_url($url);
 		parse_str($url_parse["query"], $params);
+
+
 
 		$found = stripos($page_content, $params["title"]);
 		$this->assertTrue($found);
