@@ -1,6 +1,5 @@
 <VirtualHost *:80>
-  # [...]
-
+  ServerName localhost
   ServerAlias local.gios.asu.edu
   
   DocumentRoot %TRAVIS_BUILD_DIR%
@@ -20,5 +19,4 @@
     FastCgiExternalServer /usr/lib/cgi-bin/php5-fcgi -host 127.0.0.1:9000 -pass-header Authorization
   </IfModule>
 
-  # [...]
 </VirtualHost>
