@@ -15,7 +15,6 @@ class SampleTest extends \WP_UnitTestCase {
 	 * A single example test.
 	 */
 
-
 	//  function test_email_template() {
    //
 	// 	 //call email-templates.php and pass parameters to generate the output in buffer
