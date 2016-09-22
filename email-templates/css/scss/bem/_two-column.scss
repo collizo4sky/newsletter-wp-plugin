@@ -1,7 +1,7 @@
 body {
   -webkit-font-smoothing: antialiased;
   background-color: #f1f1f1;
-  font-family: Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -43,12 +43,6 @@ table, table tr, table td {
     color: #fff;
   }
 
-  .header__wrap-inner {
-    img {
-      margin: 0 auto 30px;
-    }
-  }
-
   .header__title {
     border-bottom-width: 2px;
     border-bottom-style: solid;
@@ -58,7 +52,8 @@ table, table tr, table td {
   .header__title-text {
     font-size: 28px;
     font-weight: bold;
-    margin: 0 auto 30px;
+    // padding: 0 auto 30px;
+    font-family: Helvetica, Arial, sans-serif; // Outlook explicitly needs to be told what font to use here.
   }
 }
 
@@ -124,4 +119,6 @@ table, table tr, table td {
 
 .footer {
   width: 100%;
+  font-family: Helvetica, Arial, sans-serif; // Outlook explicitly needs to be told what font to use here.
+
 }
