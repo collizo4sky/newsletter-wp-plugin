@@ -168,9 +168,8 @@ function generate_data( $title, $posts ) {
 // ====
 // Main
 // ====
-// print_r($_GET);
-// for($i = 1; $i <= 1; $i++){
-  $i = 1;
+$html = '';
+for($i = 1; $i <= 2; $i++){
   $post_options = array(
     'posts_per_page' => -1, // Show all posts
     'post_status'    => 'publish',
@@ -178,23 +177,15 @@ function generate_data( $title, $posts ) {
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
   );
-  print "</br></br>";
+
   $download   = get_parameter( 'download', false );
-  print "Download: ".$download."</br>";
   $title      = get_parameter( 'title-section-'.$i, '' );
-  print "Title: ".$title."</br>";
   $tags       = get_parameter( 'tags', false );
-  print "Tags: ".$tags."</br>";
   $categories = get_parameter( 'categories-section-'.$i, false );
-  print "Category: ".$categories."</br>";
   $start_date = get_parameter( 'start_date-section-'.$i, false );
-  print "Start Date: ".$start_date."</br>";
   $end_date   = get_parameter( 'end_date-section-'.$i, false );
-  print "End Date: ".$end_date."</br>";
   $template   = get_parameter( 'template-section-'.$i, 'board-letter' );
-  print "Template: ".$template."</br>";
   $limit      = get_parameter( 'limit-section-'.$i, '-1' );
-  print "Limit: ".$limit."</br>";
 
   // Validate input
   if ( empty( $title ) ) {
@@ -238,13 +229,10 @@ function generate_data( $title, $posts ) {
   if ( $limit !== '-1' ) {
     $post_options['posts_per_page'] = intval( $limit );
   }
-  var_dump($post_options);
-  print "</br>POSTS: ";
+
   $posts = get_posts( $post_options );
-  var_dump($posts);
-  print "</br>DATA: ";
   $data  = generate_data( $title, $posts );
-  var_dump($data);
+
   // Step 1. Generate CSS from SCSS
   $scss = new scssc;
   $scss->setImportPaths( '../email-templates/css/scss/' );
@@ -305,8 +293,8 @@ function generate_data( $title, $posts ) {
   // Step 3. Inline CSS into compiled template
   $emogrifier = new \Pelago\Emogrifier( $compiled, $css );
   $emogrifier->disableStyleBlocksParsing();
-  $html       = $emogrifier->emogrify();
-// }
+  $html       = $html.$emogrifier->emogrify();
+}
 
 if ( $download === 'true' ) {
   // YOU NEED TO TELL THE BROWSER EVERYTHING IS OK
