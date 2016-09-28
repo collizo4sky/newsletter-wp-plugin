@@ -74,73 +74,88 @@ jQuery( function ( $ ) {
         route = 'generate';
       }
 
-      // Title
-      title = $('#title').isRequired( null, invalidCallback ).val();
+      // ---------- START LOOP for # of SECTIONS -----------------
+      var section = '';
+      for(i = 1; i <=2; i++){
 
-      // Tags
-      tags = get_pill_data( $('#tags-pills-id .pill') );
+        section = '-section-'+i;
 
-      // Categories
-      categories = $('#categories-id').isRequired( null, invalidCallback ).val();
+        // Title
+        title = $('#title'+section).isRequired( null, invalidCallback ).val();
 
-      // start date
-      start_date = $('#start-date-datepicker').val();
+        // Tags
+        tags = get_pill_data( $('#tags-pills-id .pill') );
+        if(i == 1){
 
-      // end date
-      end_date = $('#end-date-datepicker').val();
-
-      // template
-      template = $('#template-id').val();
-
-      // template
-      limit = $('#limit-id').isRequired( null, invalidCallback ).val();
-
-
-      if ( hasError ) {
-        $('.form-table').before( '<p style="color: red" class="error-message">' + errorMessage + '</p>' );
-        return;
-      } else {
-        $('.error-message').remove();
-      }
-
-      if ( route === 'download' || route === 'generate' ) {
-        var url = window.url;
-
-        url += '?';
-        url += 'type=' + route;
-
-        if ( title !== false ) {
-          url += '&title=' + title;
         }
 
-        if ( tags !== false ) {
-          url += '&tags=' + tags;
+        // Categories
+        categories = $('#categories-id'+section).isRequired( null, invalidCallback ).val();
+
+        // start date
+        start_date = $('#start-date-datepicker'+section).val();
+
+        // end date
+        end_date = $('#end-date-datepicker'+section).val();
+
+        // template
+        template = $('#template-id'+section).val();
+
+        // template
+        limit = $('#limit-id'+section).isRequired( null, invalidCallback ).val();
+
+
+        if ( hasError ) {
+          $('.form-table').before( '<p style="color: red" class="error-message">' + errorMessage + '</p>' );
+          return;
+        } else {
+          $('.error-message').remove();
         }
 
-        if ( categories !== false ) {
-          url += '&categories=' + categories;
+        if ( route === 'download' || route === 'generate' ) {
+
+          if(i == 1){
+            var url = window.url;
+
+            url += '?';
+            url += 'type=' + route;
+          }
+
+
+          if ( title !== false ) {
+            url += '&title'+section+'=' + title;
+          }
+
+          // condition for tags changed. added && i == 1
+          if ( tags !== false && i == 1) {
+            url += '&tags=' + tags;
+          }
+
+          if ( categories !== false ) {
+            url += '&categories'+section+'=' + categories;
+          }
+
+          if ( start_date !== false ) {
+            url += '&start_date'+section+'=' + start_date;
+          }
+
+          if ( end_date !== false ) {
+            url += '&end_date'+section+'=' + end_date;
+          }
+
+          if ( template !== false ) {
+            url += '&template'+section+'=' + template;
+          }
+
+          url += '&limit'+section+'=' + limit;
+
+          // condition for download changed. added && i == 1
+          if ( route === 'download' && i == 1) {
+            url += '&download=true';
+          }
         }
-
-        if ( start_date !== false ) {
-          url += '&start_date=' + start_date;
-        }
-
-        if ( end_date !== false ) {
-          url += '&end_date=' + end_date;
-        }
-
-        if ( template !== false ) {
-          url += '&template=' + template;
-        }
-
-        url += '&limit=' + limit;
-
-        if ( route === 'download' ) {
-          url += '&download=true';
-        }
-
-        var win = window.open( url, '_blank' );
-        win.focus();
-      }
+      } // END OF FOR LOOP
+      var win = window.open( url, '_blank' );
+      win.focus();
     });
   } );

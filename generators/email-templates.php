@@ -19,22 +19,22 @@ function get_parameter( $name, $default ) {
 }
 
 function strip_only( $html, $html_tags, $strip_content = false ) {
-  $content = ''; 
-  if( ! is_array( $html_tags ) ) { 
-    $html_tags = ( strpos( $html, '>' ) !== false ? explode( '>', str_replace( '<', '', $html_tags ) ) : array( $html_tags ) ); 
+  $content = '';
+  if( ! is_array( $html_tags ) ) {
+    $html_tags = ( strpos( $html, '>' ) !== false ? explode( '>', str_replace( '<', '', $html_tags ) ) : array( $html_tags ) );
     if ( end( $html_tags ) == '' ) {
-      array_pop( $html_tags ); 
+      array_pop( $html_tags );
     }
   }
 
-  foreach ( $html_tags as $tag ) { 
+  foreach ( $html_tags as $tag ) {
     if ( $strip_content ) {
       $content = '(.+</'. $tag .'[^>]*>|)';
     }
-    $html = preg_replace( '#</?'.$tag.'[^>]*>' . $content . '#is', '', $html ); 
+    $html = preg_replace( '#</?'.$tag.'[^>]*>' . $content . '#is', '', $html );
   }
 
-  return $html; 
+  return $html;
 }
 
 function get_attached_image( $post ) {
@@ -73,7 +73,7 @@ function get_page_feature_image( $post ) {
     if ( parse_url( $page_feature_image, PHP_URL_SCHEME ) == '' && substr( $page_feature_image, 0, strlen('//')) !== '//' ) {
       $page_feature_image = home_url( $page_feature_image );
     }
-    
+
     return $page_feature_image;
   }
 
@@ -168,130 +168,145 @@ function generate_data( $title, $posts ) {
 // ====
 // Main
 // ====
-$post_options = array(
-  'posts_per_page' => -1, // Show all posts
-  'post_status'    => 'publish',
-  'post_type'      => 'post',
-  'orderby'        => 'menu_order',
-  'order'          => 'ASC',
-);
-
-$download   = get_parameter( 'download', false );
-$title      = get_parameter( 'title', '' );
-$tags       = get_parameter( 'tags', false );
-$categories = get_parameter( 'categories', false );
-$start_date = get_parameter( 'start_date', false );
-$end_date   = get_parameter( 'end_date', false );
-$template   = get_parameter( 'template', 'board-letter' );
-$limit      = get_parameter( 'limit', '-1' );
-
-// Validate input
-if ( empty( $title ) ) {
-  print 'Title is required.';
-  die();
-}
-
-if ( empty( $categories ) ) {
-  print 'A category is required.';
-  die();
-}
-
-if ( empty( $template ) ) {
-  print 'A template is required.';
-  die();
-}
-
-
-if ( false !== $tags ) {
-  $post_options['tag'] = $tags;
-}
-
-if ( false !== $categories && $categories !== 'no-category' ) {
-  $post_options['category_name'] = $categories;
-}
-
-if ( false !== $start_date || false !== $end_date ) {
-  $date_query = array();
-
-  if ( false !== $start_date ) {
-    $date_query['after'] = $start_date;
-  }
-
-  if ( false !== $end_date ) {
-    $date_query['before'] = $end_date;
-  }
-
-  $post_options['date_query'] = $date_query;
-}
-
-if ( $limit !== '-1' ) {
-  $post_options['posts_per_page'] = intval( $limit );
-}
-
-$posts = get_posts( $post_options );
-$data  = generate_data( $title, $posts );
-
-// Step 1. Generate CSS from SCSS
-$scss = new scssc;
-$scss->setImportPaths( '../email-templates/css/scss/' );
-$css  = $scss->compile('@import "main.scss"');
-
-// Step 2. Compile Handlebars template with Data
-$template_path =  __DIR__ . '/../email-templates/emails/';
-
-try {
-  $get_real_value = function( $value, $context ) {
-    if ( $value instanceof \Handlebars\StringWrapper ) {
-      return $get_real_value( '' . $value, $context );
-    } else if ( array_key_exists( $value, $context ) ) {
-      return $context[ $value ];
-    } else {
-      // Now string to real type
-      if ( is_numeric( $value ) ) {
-        return $value + 0;
-      } else if ( in_array( $value, [ 'true', 'false' ] ) ) {
-        return ( 'true' === $value ? true : false );
-      } else {
-        return $value;
-      }
-    }
-  };
-
-  $engine = new Handlebars(
-      array(
-        'loader' => new \Handlebars\Loader\FilesystemLoader( $template_path ),
-        'partials_loader' => new \Handlebars\Loader\FilesystemLoader( $template_path, array( 'prefix' => '_' ) ),
-      )
+// print_r($_GET);
+// for($i = 1; $i <= 1; $i++){
+  $i = 1;
+  $post_options = array(
+    'posts_per_page' => -1, // Show all posts
+    'post_status'    => 'publish',
+    'post_type'      => 'post',
+    'orderby'        => 'menu_order',
+    'order'          => 'ASC',
   );
+  print "</br></br>";
+  $download   = get_parameter( 'download', false );
+  print "Download: ".$download."</br>";
+  $title      = get_parameter( 'title-section-'.$i, '' );
+  print "Title: ".$title."</br>";
+  $tags       = get_parameter( 'tags', false );
+  print "Tags: ".$tags."</br>";
+  $categories = get_parameter( 'categories-section-'.$i, false );
+  print "Category: ".$categories."</br>";
+  $start_date = get_parameter( 'start_date-section-'.$i, false );
+  print "Start Date: ".$start_date."</br>";
+  $end_date   = get_parameter( 'end_date-section-'.$i, false );
+  print "End Date: ".$end_date."</br>";
+  $template   = get_parameter( 'template-section-'.$i, 'board-letter' );
+  print "Template: ".$template."</br>";
+  $limit      = get_parameter( 'limit-section-'.$i, '-1' );
+  print "Limit: ".$limit."</br>";
 
-  $engine->addHelper('is_odd', function ( $template, $context, $args ) use ( $engine, $get_real_value ) {
-    $index = $context->get( '@index' );
-    if ( $index % 2 === 1 ) {
-      $template->setStopToken( 'else' );
-      $buffer = $template->render( $template, $context, array(), true );
-      $template->setStopToken( false );
-      $template->discard( $context );
-    } else {
-      $template->setStopToken( 'else' );
-      $template->discard( $context );
-      $template->setStopToken( false );
-      $buffer = $template->render( $template, $context, array(), true );
+  // Validate input
+  if ( empty( $title ) ) {
+    print 'Title is required.';
+    die();
+  }
+
+  if ( empty( $categories ) ) {
+    print 'A category is required.';
+    die();
+  }
+
+  if ( empty( $template ) ) {
+    print 'A template is required.';
+    die();
+  }
+
+
+  if ( false !== $tags ) {
+    $post_options['tag'] = $tags;
+  }
+
+  if ( false !== $categories && $categories !== 'no-category' ) {
+    $post_options['category_name'] = $categories;
+  }
+
+  if ( false !== $start_date || false !== $end_date ) {
+    $date_query = array();
+
+    if ( false !== $start_date ) {
+      $date_query['after'] = $start_date;
     }
-    return $buffer;
-  });
 
-  $compiled = $engine->render( $template, $data );
-} catch (Exception $e) {
-  echo 'Could not find template.';
+    if ( false !== $end_date ) {
+      $date_query['before'] = $end_date;
+    }
 
-  var_dump($e);
-  die();
-}
+    $post_options['date_query'] = $date_query;
+  }
 
-// Step 3. Inline CSS into compiled template
-$emogrifier = new \Pelago\Emogrifier( $compiled, $css );
-$emogrifier->disableStyleBlocksParsing();
-$html       = $emogrifier->emogrify();
+  if ( $limit !== '-1' ) {
+    $post_options['posts_per_page'] = intval( $limit );
+  }
+  var_dump($post_options);
+  print "</br>POSTS: ";
+  $posts = get_posts( $post_options );
+  var_dump($posts);
+  print "</br>DATA: ";
+  $data  = generate_data( $title, $posts );
+  var_dump($data);
+  // Step 1. Generate CSS from SCSS
+  $scss = new scssc;
+  $scss->setImportPaths( '../email-templates/css/scss/' );
+  $css  = $scss->compile('@import "main.scss"');
+
+  // Step 2. Compile Handlebars template with Data
+  $template_path =  __DIR__ . '/../email-templates/emails/';
+
+  try {
+    $get_real_value = function( $value, $context ) {
+      if ( $value instanceof \Handlebars\StringWrapper ) {
+        return $get_real_value( '' . $value, $context );
+      } else if ( array_key_exists( $value, $context ) ) {
+        return $context[ $value ];
+      } else {
+        // Now string to real type
+        if ( is_numeric( $value ) ) {
+          return $value + 0;
+        } else if ( in_array( $value, [ 'true', 'false' ] ) ) {
+          return ( 'true' === $value ? true : false );
+        } else {
+          return $value;
+        }
+      }
+    };
+
+    $engine = new Handlebars(
+        array(
+          'loader' => new \Handlebars\Loader\FilesystemLoader( $template_path ),
+          'partials_loader' => new \Handlebars\Loader\FilesystemLoader( $template_path, array( 'prefix' => '_' ) ),
+        )
+    );
+
+    $engine->addHelper('is_odd', function ( $template, $context, $args ) use ( $engine, $get_real_value ) {
+      $index = $context->get( '@index' );
+      if ( $index % 2 === 1 ) {
+        $template->setStopToken( 'else' );
+        $buffer = $template->render( $template, $context, array(), true );
+        $template->setStopToken( false );
+        $template->discard( $context );
+      } else {
+        $template->setStopToken( 'else' );
+        $template->discard( $context );
+        $template->setStopToken( false );
+        $buffer = $template->render( $template, $context, array(), true );
+      }
+      return $buffer;
+    });
+
+    $compiled = $engine->render( $template, $data );
+  } catch (Exception $e) {
+    echo 'Could not find template.';
+
+    var_dump($e);
+    die();
+  }
+
+  // Step 3. Inline CSS into compiled template
+  $emogrifier = new \Pelago\Emogrifier( $compiled, $css );
+  $emogrifier->disableStyleBlocksParsing();
+  $html       = $emogrifier->emogrify();
+// }
 
 if ( $download === 'true' ) {
   // YOU NEED TO TELL THE BROWSER EVERYTHING IS OK
