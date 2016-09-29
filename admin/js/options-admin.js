@@ -99,7 +99,10 @@ jQuery( function ( $ ) {
         end_date = $('#end-date-datepicker'+section).val();
 
         // template
-        template = $('#template-id'+section).val();
+        // We only take this input once and keep it consistent throughout the email.
+        if(i == 1){
+          template = $('#template-id'+section).val();
+        }
 
         // template
         limit = $('#limit-id'+section).isRequired( null, invalidCallback ).val();
@@ -143,7 +146,8 @@ jQuery( function ( $ ) {
             url += '&end_date'+section+'=' + end_date;
           }
 
-          if ( template !== false ) {
+          // Template is read only once.
+          if ( template !== false && i == 1) {
             url += '&template'+section+'=' + template;
           }
 

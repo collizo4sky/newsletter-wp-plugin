@@ -114,7 +114,7 @@ class Options_Admin extends Base_Registrar {
     $this->add_settings_field( self::$section_newsletter_tags."_1", 'Tags', 'newsletter_tags_callback', $args );
     $this->add_settings_field( self::$section_newsletter_date_start."_1", 'Start Date', 'newsletter_start_date_callback', $args );
     $this->add_settings_field( self::$section_newsletter_date_end."_1", 'End Date', 'newsletter_end_date_callback', $args );
-    $this->add_settings_field( self::$section_newsletter_template."_1", 'Template *', 'newsletter_template_callback', $args );
+    //$this->add_settings_field( self::$section_newsletter_template."_1", 'Template *', 'newsletter_template_callback', $args );
     $this->add_settings_field( self::$section_newsletter_post_limit."_1", 'Max Number of Posts', 'newsletter_post_limit_callback', $args );
   }
 

@@ -184,7 +184,7 @@ for($i = 1; $i <= 2; $i++){
   $categories = get_parameter( 'categories-section-'.$i, false );
   $start_date = get_parameter( 'start_date-section-'.$i, false );
   $end_date   = get_parameter( 'end_date-section-'.$i, false );
-  $template   = get_parameter( 'template-section-'.$i, 'board-letter' );
+  $template   = get_parameter( 'template-section-1', 'board-letter' );
   $limit      = get_parameter( 'limit-section-'.$i, '-1' );
 
   // Validate input
