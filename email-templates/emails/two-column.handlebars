@@ -12,9 +12,10 @@
       <table class="header">
         <tr class="header__preheader">
           <td>
-            <p>{{title}}</p>    
+            <p>{{title}}</p>
           </td>
         </tr>
+        {{#if header}}
         <tr class="header__wrap">
           <td>
             <table class="header__wrap-inner">
@@ -28,13 +29,14 @@
             </table>
           </td>
         </tr>
+        {{/if}}
         <tr class="header__title">
           <td>
             <table class="header__title-inner">
               <tr>
                 <td align="center">
                   <p class="header__title-text">
-                    {{title}}
+                    <span style="font-size:25px;color:#96203D;line-height:normal;"><strong> {{title}} </strong></span>
                   </p>
                 </td>
               </tr>
@@ -53,7 +55,7 @@
     <td>
       <table class="content" align="center">
         <tr>
-          <td>  
+          <td>
             <table>
               <tr>
                 <td valign="top">
@@ -132,6 +134,7 @@
       <img height="32" alt="" src="{{no_image_url}}">
     </td>
   </tr>
+  {{#if footer}}
   <tr>
     <td>
       <table class="footer">
@@ -152,6 +155,7 @@
       </table>
     </td>
   </tr>
+  {{/if}}
 </table>
 
 </body>

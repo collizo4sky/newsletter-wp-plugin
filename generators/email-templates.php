@@ -233,6 +233,17 @@ for($i = 1; $i <= 2; $i++){
   $posts = get_posts( $post_options );
   $data  = generate_data( $title, $posts );
 
+  // Update section. Mention whether 1st or last section. Based on this we will be appending header and footer of the output page.
+  if($i == 1)
+    $data['header'] = true;
+  else
+    $data['header'] = false;
+
+  if($i == 2)
+    $data['footer'] = true;
+  else
+    $data['footer'] = false;
+
   // Step 1. Generate CSS from SCSS
   $scss = new scssc;
   $scss->setImportPaths( '../email-templates/css/scss/' );
