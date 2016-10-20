@@ -169,7 +169,8 @@ function generate_data( $title, $posts ) {
 // Main
 // ====
 $html = '';
-for($i = 1; $i <= 2; $i++){
+$section = get_parameter('sections', 1);
+for($i = 1; $i <= $section; $i++){
   $post_options = array(
     'posts_per_page' => -1, // Show all posts
     'post_status'    => 'publish',
@@ -239,7 +240,7 @@ for($i = 1; $i <= 2; $i++){
   else
     $data['header'] = false;
 
-  if($i == 2)
+  if($i == $section) // This should equal to the last number in the loop. (# of sections)
     $data['footer'] = true;
   else
     $data['footer'] = false;

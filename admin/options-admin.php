@@ -104,24 +104,108 @@ class Options_Admin extends Base_Registrar {
     $this->add_settings_field( self::$section_newsletter_template, 'Template *', 'newsletter_template_callback', $args );
     $this->add_settings_field( self::$section_newsletter_post_limit, 'Max Number of Posts', 'newsletter_post_limit_callback', $args );
 
-    $this->add_settings_field('HR', '', 'test_callback');
-    // SECTION 2
 
-    $args['section'] = 2;
 
-    $this->add_settings_field( self::$section_newsletter_title."_1", 'Title *', 'newsletter_title_callback', $args );
-    $this->add_settings_field( self::$section_newsletter_category."_1", 'Category *', 'newsletter_category_callback', $args );
-    $this->add_settings_field( self::$section_newsletter_tags."_1", 'Tags', 'newsletter_tags_callback', $args );
-    $this->add_settings_field( self::$section_newsletter_date_start."_1", 'Start Date', 'newsletter_start_date_callback', $args );
-    $this->add_settings_field( self::$section_newsletter_date_end."_1", 'End Date', 'newsletter_end_date_callback', $args );
-    //$this->add_settings_field( self::$section_newsletter_template."_1", 'Template *', 'newsletter_template_callback', $args );
-    $this->add_settings_field( self::$section_newsletter_post_limit."_1", 'Max Number of Posts', 'newsletter_post_limit_callback', $args );
-  }
 
-  public function test_callback(){
-    $line = '--------------------------------------------------------------------------------------------------------------------------------------------------------------------------';
-    print $line.$line;
-  }
+    $js = <<<JS
+    function addSection(){
+      var numberOfSections = parseInt(document.getElementById("sectionnumber").value) + 1;
+      var sectionId = '-section-'+numberOfSections;
+      document.getElementById('sectionnumber').value = numberOfSections;
+      var element = document.createElement("div");
+      element.setAttribute("id", "section-"+numberOfSections);
+
+      var html = '<hr>';
+      html = html + '<table class="form-table">';
+      html = html +   '<tbody>';
+      html = html +     '<tr>';
+      html = html +       '<th scope="row">Title *</th>';
+      html = html +       '<td>';
+      html = html +         '<input type="text" placeholder="Email Title" class="regular-text" name="title'+sectionId+'" id="title'+sectionId+'" />';
+      html = html +         '</br><b>Section # '+numberOfSections+'</b>'
+      html = html +       '</td>';
+      html = html +     '</tr>';
+      html = html +     '<tr>';
+      html = html +       '<tr><th scope="row">Category *</th>';
+      html = html +       '<td class="category-'+numberOfSections+'"></td>';
+      html = html +     '</tr>';
+      html = html +     '<tr>';
+      html = html +       '<th scope="row">Tags</th>';
+      html = html +       '<td>';
+      html = html +          '<em>Start typing the tag name, choose the tag from the auto complete and then click the button to actually add it to your newsletter.</em><br>';
+      html = html +          '<span class="twitter-typeahead" style="position: relative; display: inline-block;">';
+      html = html +              '<input class="regular-text tt-hint" style="position: absolute; top: 0px; left: 0px; border-color: transparent; box-shadow: none; opacity: 1; background: rgb(255, 255, 255) none repeat scroll 0% 0%;" readonly="" autocomplete="off" spellcheck="false" tabindex="-1" dir="ltr" type="text">';
+      html = html +              '<span class="twitter-typeahead" style="position: relative; display: inline-block;">';
+      html = html +                 '<input class="regular-text tt-input tt-hint" autocomplete="off" spellcheck="false" dir="ltr" style="position: absolute; vertical-align: top; background: transparent none repeat scroll 0% 0%; top: 0px; left: 0px; border-color: transparent; box-shadow: none; opacity: 1;" readonly="" 				tabindex="-1" type="text">';
+      html = html +                 '<input class="regular-text tt-input" name="tags" id="tags-id" placeholder="Add tags" autocomplete="off" spellcheck="false" dir="auto" style="position: relative; vertical-align: top; background-color: transparent;" type="text">';
+      html = html +                 '<pre aria-hidden="true" style="position: absolute; visibility: hidden; white-space: pre; font-family: -apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,Oxygen-Sans,Ubuntu,Cantarell,&quot;Helvetica Neue&quot;,sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: 0px; text-indent: 0px; text-rendering: optimizelegibility; text-transform: none;"></pre>';
+      html = html +                 '<div class="tt-menu" style="position: absolute; top: 100%; left: 0px; z-index: 100; display: none;">';
+      html = html +                     '<div class="tt-dataset tt-dataset-tags"></div>';
+      html = html +                 '</div>';
+      html = html +              '</span>';
+      html = html +              '<pre aria-hidden="true" style="position: absolute; visibility: hidden; white-space: pre; font-family: -apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,Oxygen-Sans,Ubuntu,Cantarell,&quot;Helvetica Neue&quot;,sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: 0px; text-indent: 0px; text-rendering: optimizelegibility; text-transform: none;"></pre>';
+      html = html +              '<div class="tt-menu" style="position: absolute; top: 100%; left: 0px; z-index: 100; display: none;">';
+      html = html +                  '<div class="tt-dataset tt-dataset-tags"></div>';
+      html = html +              '</div>';
+      html = html +          '</span>';
+      html = html +          '<button class="button" id="tags-button-id">Use this Tag</button>';
+      html = html +          '<div id="tags-pills-id" class="pills"></div>';
+      html = html +       '</td>';
+      html = html +     '</tr>';
+      html = html +     '<tr>';
+      html = html +       '<th scope="row">Start Date</th>';
+      html = html +       '<td>';
+      html = html +         '<input id="start-date-datepicker-section-'+numberOfSections+'" type="text" onfocus="showDate(this)" />';
+      html = html +       '</td>';
+      html = html +     '</tr>';
+      html = html +     '<tr>';
+      html = html +       '<th scope="row">End Date</th>';
+      html = html +       '<td>';
+      html = html +         '<input class="datepicker" id="end-date-datepicker-section-'+numberOfSections+'" type="text" onfocus="showDate(this)"/>';
+      html = html +       '</td>';
+      html = html +     '</tr>';
+      html = html +     '<tr>';
+      html = html +       '<th scope="row">Max Number of Posts</th>';
+      html = html +       '<td>';
+      html = html +         '<input min="-1" max="1000" name="limit" id="limit-id-section-'+numberOfSections+'" value="-1" type="number">';
+      html = html +       '</td>';
+      html = html +     '</tr>';
+      html = html +   '</tbody>';
+      html = html +  '</table>';
+
+      element.innerHTML = html;
+      var div = document.getElementById('section-container');
+      div.appendChild(element);
+      jQuery("#categories-id-section-1").clone().prop({ id: "categories-id-section-"+numberOfSections}).appendTo(".category-"+numberOfSections);
+
+
+    }
+
+    function deleteSection(){
+      var numberOfSections = parseInt(document.getElementById("sectionnumber").value);
+      if(numberOfSections <= 2){
+        return;
+      }
+      // alert("section-" + numberOfSections);
+      var id = "section-" + numberOfSections;
+      var el = document.getElementById(id);
+      el.parentNode.removeChild(el);
+      document.getElementById("sectionnumber").value = numberOfSections - 1;
+    }
+
+    function showDate(id){
+      new Pikaday({ field: id });
+    }
+
+
+
+JS;
+  echo '<script>'.$js.'</script>';
+
+
+}
+
+
   /**
    * Print the Section text
    */
@@ -198,18 +282,18 @@ class Options_Admin extends Base_Registrar {
 
   public function newsletter_start_date_callback(array $args) {
     $section = '-section-'.$args['section'];
-    print '<input type="text" id="start-date-datepicker'.$section.'">';
-    print '<script>
-      jQuery(function($) { new Pikaday({ field: document.getElementById("start-date-datepicker'.$section.'") }) });
-    </script>';
+    print '<input type="text" id="start-date-datepicker'.$section.'" onfocus="showDate(this)">';
+    // print '<script>
+    //   jQuery(function($) { new Pikaday({ field: document.getElementById("start-date-datepicker'.$section.'") }) });
+    // </script>';
   }
 
   public function newsletter_end_date_callback(array $args) {
     $section = '-section-'.$args['section'];
-    print '<input type="text" id="end-date-datepicker'.$section.'">';
-    print '<script>
-      jQuery(function($) { new Pikaday({ field: document.getElementById("end-date-datepicker'.$section.'") }) });
-    </script>';
+    print '<input type="text" id="end-date-datepicker'.$section.'" onfocus="showDate(this)">';
+    // print '<script>
+    //   jQuery(function($) { new Pikaday({ field: document.getElementById("end-date-datepicker'.$section.'") }) });
+    // </script>';
   }
 
   public function newsletter_template_callback(array $args) {

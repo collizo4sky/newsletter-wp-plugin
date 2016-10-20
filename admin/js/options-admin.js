@@ -75,8 +75,9 @@ jQuery( function ( $ ) {
       }
 
       // ---------- START LOOP for # of SECTIONS -----------------
+      var s = $('#sectionnumber').val();
       var section = '';
-      for(i = 1; i <=2; i++){
+      for(i = 1; i <= parseInt(s); i++){
 
         section = '-section-'+i;
 
@@ -159,6 +160,7 @@ jQuery( function ( $ ) {
           }
         }
       } // END OF FOR LOOP
+      url += '&sections='+s;
       var win = window.open( url, '_blank' );
       win.focus();
     });
