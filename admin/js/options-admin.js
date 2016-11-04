@@ -85,9 +85,11 @@ jQuery( function ( $ ) {
         title = $('#title'+section).isRequired( null, invalidCallback ).val();
 
         // Tags
-        tags = get_pill_data( $('#tags-pills-id .pill') );
         if(i == 1){
-
+          tags = get_pill_data( $('#tags-pills-id .pill') );
+        }
+        else{
+          tags = get_pill_data( $('#tags-pills-id-'+i+' .pill') );
         }
 
         // Categories
@@ -131,7 +133,7 @@ jQuery( function ( $ ) {
           }
 
           // condition for tags changed. added && i == 1
-          if ( tags !== false && i == 1) {
+          if ( tags !== false) {
             url += '&tags=' + tags;
           }
 

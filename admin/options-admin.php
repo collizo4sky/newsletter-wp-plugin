@@ -131,26 +131,14 @@ class Options_Admin extends Base_Registrar {
       html = html +     '</tr>';
       html = html +     '<tr>';
       html = html +       '<th scope="row">Tags</th>';
-      html = html +       '<td>';
+      html = html +       '<td><div id="tags-div">';
       html = html +          '<em>Start typing the tag name, choose the tag from the auto complete and then click the button to actually add it to your newsletter.</em><br>';
-      html = html +          '<span class="twitter-typeahead" style="position: relative; display: inline-block;">';
-      html = html +              '<input class="regular-text tt-hint" style="position: absolute; top: 0px; left: 0px; border-color: transparent; box-shadow: none; opacity: 1; background: rgb(255, 255, 255) none repeat scroll 0% 0%;" readonly="" autocomplete="off" spellcheck="false" tabindex="-1" dir="ltr" type="text">';
-      html = html +              '<span class="twitter-typeahead" style="position: relative; display: inline-block;">';
-      html = html +                 '<input class="regular-text tt-input tt-hint" autocomplete="off" spellcheck="false" dir="ltr" style="position: absolute; vertical-align: top; background: transparent none repeat scroll 0% 0%; top: 0px; left: 0px; border-color: transparent; box-shadow: none; opacity: 1;" readonly="" 				tabindex="-1" type="text">';
-      html = html +                 '<input class="regular-text tt-input" name="tags" id="tags-id" placeholder="Add tags" autocomplete="off" spellcheck="false" dir="auto" style="position: relative; vertical-align: top; background-color: transparent;" type="text">';
-      html = html +                 '<pre aria-hidden="true" style="position: absolute; visibility: hidden; white-space: pre; font-family: -apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,Oxygen-Sans,Ubuntu,Cantarell,&quot;Helvetica Neue&quot;,sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: 0px; text-indent: 0px; text-rendering: optimizelegibility; text-transform: none;"></pre>';
-      html = html +                 '<div class="tt-menu" style="position: absolute; top: 100%; left: 0px; z-index: 100; display: none;">';
-      html = html +                     '<div class="tt-dataset tt-dataset-tags"></div>';
-      html = html +                 '</div>';
-      html = html +              '</span>';
-      html = html +              '<pre aria-hidden="true" style="position: absolute; visibility: hidden; white-space: pre; font-family: -apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,Oxygen-Sans,Ubuntu,Cantarell,&quot;Helvetica Neue&quot;,sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: 0px; text-indent: 0px; text-rendering: optimizelegibility; text-transform: none;"></pre>';
-      html = html +              '<div class="tt-menu" style="position: absolute; top: 100%; left: 0px; z-index: 100; display: none;">';
-      html = html +                  '<div class="tt-dataset tt-dataset-tags"></div>';
-      html = html +              '</div>';
-      html = html +          '</span>';
-      html = html +          '<button class="button" id="tags-button-id">Use this Tag</button>';
-      html = html +          '<div id="tags-pills-id" class="pills"></div>';
-      html = html +       '</td>';
+      html = html +          '<input class="tags" type="text" name="tags" id="tags-'+numberOfSections+'" placeholder="Add Tags"/>';
+      if(!getPillsString()){
+        html = html +        '<button class="tags-button button" id="tags-button-id-'+numberOfSections+'">Use this Tag</button>';
+        html = html +        '<div id="tags-pills-id-'+numberOfSections+'" class="pills"></div>';
+      }
+      html = html +       '</div></td>';
       html = html +     '</tr>';
       html = html +     '<tr>';
       html = html +       '<th scope="row">Start Date</th>';
@@ -178,12 +166,98 @@ class Options_Admin extends Base_Registrar {
       div.appendChild(element);
       jQuery("#categories-id-section-1").clone().prop({ id: "categories-id-section-"+numberOfSections}).appendTo(".category-"+numberOfSections);
 
+      jQuery(function ($) {
+          var substringMatcher = function (strs) {
+            return function findMatches(q, cb) {
+              var matches, substringRegex;
+
+              // an array that will be populated with substring matches
+              matches = [];
+
+              // regex used to determine if a string contains the substring `q`
+              substrRegex = new RegExp(q, 'i');
+
+              // iterate through the pool of strings and for any string that
+              // contains the substring `q`, add it to the `matches` array
+              $.each(strs, function(i, str) {
+                if (substrRegex.test(str.name)) {
+                  matches.push(str);
+                }
+              });
+
+              cb(matches);
+            };
+          }
+
+          //var data = [{"term_id" : "5","term_slug" : "2016-accomplishments","name" : "2016-accomplishments"},{"term_id" : "8","term_slug" : "bl-2016-06","name" : "bl-2016-06"},{"term_id" : "16","term_slug" : "bl-2016-07","name" : "bl-2016-07"},{"term_id" : "12","term_slug" : "global","name" : "global"},{"term_id" : "15","term_slug" : "research","name" : "Research"},{"term_id" : "14","term_slug" : "solutions","name" : "solutions"}];
+          var data = getTags();
+          $('.tags').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+          }, {
+            name: 'tags',
+            source : substringMatcher( data ),
+            display: 'name'
+          });
+
+          if ( ! getPillsString() ) {
+            $('#tags-'+numberOfSections).keypress( function(e) {
+              if ( e.keyCode === 13 /* enter key */ ) {
+                e.preventDefault();
+                $('.tags-button').click();
+                return;
+              }
+            });
+
+            $('.tags-button').click(function(e) {
+              e.preventDefault();
+
+              var term = $('#tags-'+numberOfSections).val();
+              var term_id = -1;
+              var term_slug = '';
+              var found = false;
+
+              if ( term === '' ) {
+                return;
+              }
+
+              for (var i = 0; i < data.length; i++) {
+                if ( term === data[i]['name'] ) {
+                  term_id = data[i]['term_id'];
+                  term_slug = data[i]['term_slug'];
+                  found = true;
+                }
+              }
+
+              if ( ! found ) {
+                return;
+              }
+
+              var close = '<span class="close">X</span>';
+
+              $('#tags-pills-id-'+numberOfSections).append(
+                '<div class="pill" data-id="' + term_id + '" data-slug="' + term_slug + '">' + term + close + '</div>'
+              );
+
+              // Clear typeahead
+              $('#tags-'+numberOfSections).val('');
+            });
+
+            $('#tags-pills-id-'+numberOfSections).on('click', '.pill .close', function ( e ) {
+              $(this).parent().remove();
+            });
+          } // End if
+          $(".tags").removeClass("tags");
+      });
+
+
 
     }
 
     function deleteSection(){
       var numberOfSections = parseInt(document.getElementById("sectionnumber").value);
-      if(numberOfSections <= 2){
+      if(numberOfSections <= 1){
         return;
       }
       // alert("section-" + numberOfSections);
@@ -227,6 +301,7 @@ JS;
    * Print the tag section
    */
   public function newsletter_tags_callback(array $args) {
+    $section = $args['section'];
     $tags = get_tags();
     $filtered_tags = '[';
 
@@ -245,8 +320,9 @@ JS;
     }
 
     $filtered_tags .= ']';
+    print "<script>function getTags(){ var tags = ".$filtered_tags."; return tags; };</script>";
+    $this->print_typeahead( $filtered_tags, 'tags', $section );
 
-    $this->print_typeahead( $filtered_tags, 'tags' );
   }
 
   /**
@@ -364,9 +440,10 @@ JAVASCRIPT;
     $this->print_typeahead( $data, $name, true );
   }
 
-  protected function print_typeahead( $data, $name, $no_pills = false ) {
+  protected function print_typeahead( $data, $name, $args, $no_pills = false) {
     $placeholder_text = 'Add ' . $name;
     $no_pills_string = $no_pills ? 'true' : 'false';
+    print "<script>function getPillsString(){return ".$no_pills_string.";}</script>";
 
     if ( $no_pills ) {
       $placeholder_text = 'Select a ' . $name;
@@ -466,10 +543,12 @@ JAVASCRIPT;
           } // End if
         });
       }();
-JAVASCRIPT;
-    echo '<script>' . $js . '</script>';
-  }
 
+
+JAVASCRIPT;
+
+    echo '<script type="text/javascript">' . $js . '</script>';
+  }
   public function newsletter_post_limit_callback(array $args) {
     $section = '-section-'.$args['section'];
     print '<input type="number" min="-1" max="1000" name="limit" id="limit-id'.$section.'" value="-1" />';
