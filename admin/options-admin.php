@@ -105,18 +105,6 @@ class Options_Admin extends Base_Registrar {
     $this->add_settings_field( self::$section_newsletter_template, 'Template *', 'newsletter_template_callback', $args );
     $this->add_settings_field( self::$section_newsletter_post_limit, 'Max Number of Posts', 'newsletter_post_limit_callback', $args );
 
-
-
-
-    $js = <<<JS
-    
-
-
-
-JS;
-  echo '<script>'.$js.'</script>';
-
-
 }
 
 
