@@ -170,7 +170,7 @@ function generate_data( $title, $posts ) {
 // ====
 $html = '';
 $section = get_parameter('sections', 1);
-for($i = 1; $i <= $section; $i++){
+for($section_number = 1; $section_number <= $section; $section_number++){
   $post_options = array(
     'posts_per_page' => -1, // Show all posts
     'post_status'    => 'publish',
@@ -180,13 +180,13 @@ for($i = 1; $i <= $section; $i++){
   );
 
   $download   = get_parameter( 'download', false );
-  $title      = get_parameter( 'title-section-'.$i, '' );
-  $tags       = get_parameter( 'tags', false );
-  $categories = get_parameter( 'categories-section-'.$i, false );
-  $start_date = get_parameter( 'start_date-section-'.$i, false );
-  $end_date   = get_parameter( 'end_date-section-'.$i, false );
+  $title      = get_parameter( 'title-section-'.$section_number, '' );
+  $tags       = get_parameter( 'tags-section-'.$section_number, false );
+  $categories = get_parameter( 'categories-section-'.$section_number, false );
+  $start_date = get_parameter( 'start_date-section-'.$section_number, false );
+  $end_date   = get_parameter( 'end_date-section-'.$section_number, false );
   $template   = get_parameter( 'template-section-1', 'board-letter' );
-  $limit      = get_parameter( 'limit-section-'.$i, '-1' );
+  $limit      = get_parameter( 'limit-section-'.$section_number, '-1' );
 
   // Validate input
   if ( empty( $title ) ) {
@@ -235,12 +235,12 @@ for($i = 1; $i <= $section; $i++){
   $data  = generate_data( $title, $posts );
 
   // Update section. Mention whether 1st or last section. Based on this we will be appending header and footer of the output page.
-  if($i == 1)
+  if($section_number == 1)
     $data['header'] = true;
   else
     $data['header'] = false;
 
-  if($i == $section) // This should equal to the last number in the loop. (# of sections)
+  if($section_number == $section) // This should equal to the last number in the loop. (# of sections)
     $data['footer'] = true;
   else
     $data['footer'] = false;
@@ -298,14 +298,14 @@ for($i = 1; $i <= $section; $i++){
   } catch (Exception $e) {
     echo 'Could not find template.';
 
-    var_dump($e);
+    error_log($e);
     die();
   }
 
   // Step 3. Inline CSS into compiled template
   $emogrifier = new \Pelago\Emogrifier( $compiled, $css );
   $emogrifier->disableStyleBlocksParsing();
-  $html       = $html.$emogrifier->emogrify();
+  $html       .= $emogrifier->emogrify();
 }
 
 if ( $download === 'true' ) {
