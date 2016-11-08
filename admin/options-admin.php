@@ -91,14 +91,21 @@ class Options_Admin extends Base_Registrar {
         self::$section_name
     );
 
-    $this->add_settings_field( self::$section_newsletter_title, 'Title *', 'newsletter_title_callback' );
-    $this->add_settings_field( self::$section_newsletter_category, 'Category *', 'newsletter_category_callback' );
-    $this->add_settings_field( self::$section_newsletter_tags, 'Tags', 'newsletter_tags_callback' );
-    $this->add_settings_field( self::$section_newsletter_date_start, 'Start Date', 'newsletter_start_date_callback' );
-    $this->add_settings_field( self::$section_newsletter_date_end, 'End Date', 'newsletter_end_date_callback' );
-    $this->add_settings_field( self::$section_newsletter_template, 'Template *', 'newsletter_template_callback' );
-    $this->add_settings_field( self::$section_newsletter_post_limit, 'Max Number of Posts', 'newsletter_post_limit_callback' );
-  }
+    // $args is an array containing the section number which is passed to all the callback functions.
+    $args     = array (
+            'section' => 1
+        );
+
+    // SECTION 1
+    $this->add_settings_field( self::$section_newsletter_title, 'Title *', 'newsletter_title_callback', $args );
+    $this->add_settings_field( self::$section_newsletter_category, 'Category *', 'newsletter_category_callback', $args );
+    $this->add_settings_field( self::$section_newsletter_tags, 'Tags', 'newsletter_tags_callback', $args );
+    $this->add_settings_field( self::$section_newsletter_date_start, 'Start Date', 'newsletter_start_date_callback', $args );
+    $this->add_settings_field( self::$section_newsletter_date_end, 'End Date', 'newsletter_end_date_callback', $args );
+    $this->add_settings_field( self::$section_newsletter_template, 'Template *', 'newsletter_template_callback', $args );
+    $this->add_settings_field( self::$section_newsletter_post_limit, 'Max Number of Posts', 'newsletter_post_limit_callback', $args );
+
+}
 
 
   /**
@@ -111,14 +118,18 @@ class Options_Admin extends Base_Registrar {
   /**
    * Print the title section
    */
-  public function newsletter_title_callback() {
-    print '<input type="text" placeholder="Email Title" class="regular-text" name="title" id="title" />';
+  public function newsletter_title_callback(array $args) {
+    $section = '-section-'.$args['section'];
+
+    print '<input type="text" placeholder="Email Title" class="regular-text" name="title'.$section.'" id="title'.$section.'" />';
+    print '</br><b> Section # ' . $args['section'] . '</b>';
   }
 
   /**
    * Print the tag section
    */
-  public function newsletter_tags_callback() {
+  public function newsletter_tags_callback(array $args) {
+    $section = $args['section'];
     $tags = get_tags();
     $filtered_tags = '[';
 
@@ -137,8 +148,9 @@ class Options_Admin extends Base_Registrar {
     }
 
     $filtered_tags .= ']';
+    print "<script>function getTags(){ var tags = ".$filtered_tags."; return tags; };</script>";
+    $this->print_typeahead( $filtered_tags, 'tags', $section );
 
-    $this->print_typeahead( $filtered_tags, 'tags' );
   }
 
   /**
@@ -146,10 +158,11 @@ class Options_Admin extends Base_Registrar {
    *
    * This will print out a select dropdown of all the categories
    */
-  public function newsletter_category_callback() {
+  public function newsletter_category_callback(array $args) {
     $categories = get_categories();
 
-    $html = '<select name="categories" id="categories-id">';
+    $section = '-section-'.$args['section'];
+    $html = '<select name="categories" id="categories-id'.$section.'">';
     $html .= '<option value="no-category"></option>';
     if ( is_array( $categories ) && count( $categories ) > 0 ) {
       $first = true;
@@ -171,24 +184,25 @@ class Options_Admin extends Base_Registrar {
     print $html;
   }
 
-  public function newsletter_start_date_callback() {
-    print '<input type="text" id="start-date-datepicker">';
-    print '<script>
-      jQuery(function($) { new Pikaday({ field: document.getElementById("start-date-datepicker") }) });
-    </script>';
+  public function newsletter_start_date_callback(array $args) {
+    $section = '-section-'.$args['section'];
+    print '<input type="text" id="start-date-datepicker'.$section.'" onfocus="showDate(this)">';
+    // print '<script>
+    //   jQuery(function($) { new Pikaday({ field: document.getElementById("start-date-datepicker'.$section.'") }) });
+    // </script>';
   }
 
-  public function newsletter_end_date_callback() {
-    print '<input type="text" id="end-date-datepicker">';
-    print '<script>
-      jQuery(function($) { new Pikaday({ field: document.getElementById("end-date-datepicker") }) });
-    </script>';
+  public function newsletter_end_date_callback(array $args) {
+    $section = '-section-'.$args['section'];
+    print '<input type="text" id="end-date-datepicker'.$section.'" onfocus="showDate(this)">';
+
   }
 
-  public function newsletter_template_callback() {
+  public function newsletter_template_callback(array $args) {
+    $section = '-section-'.$args['section'];
 
     $previewImagePath = plugins_url().'/newsletter-wp-plugin/email-templates/preview-images/';
-    $html  = '<select name="template" id="template-id" onchange="updatePreview()">';
+    $html  = '<select name="template'.$section.'" id="template-id'.$section.'" onchange="updatePreview('.$args['section'].')">';
     $first = true;
 
     // This variable holds the name of the template which is selected on page load.
@@ -209,32 +223,32 @@ class Options_Admin extends Base_Registrar {
 
     $html .= '</select>';
     $html .= '</br></br>';
-    $html .= '<img id="template-preview" src="'.$previewImagePath.$defaultTemplatePreview.'-template.png" height="146" width="251" onclick="scaleImage()"/>';
+    $html .= '<img id="template-preview'.$section.'" src="'.$previewImagePath.$defaultTemplatePreview.'-template.png" height="146" width="251" onclick="scaleImage('.$args['section'].')"/>';
 
     print $html;
 
     # Script to change preview of template image and enlarge preview image on click.
     $previewImagePath = plugins_url().'/newsletter-wp-plugin/email-templates/preview-images/';
     $js = <<<JAVASCRIPT
-    function updatePreview(){
+    function updatePreview(section){
       var test = "$previewImagePath";
-      var input = document.getElementById('template-id').value;
+      var input = document.getElementById('template-id'+'-section-'+section.toString()).value;
       var imagePath = "$previewImagePath"+input+"-template.png";
-      document.getElementById('template-preview').src=imagePath;
+      document.getElementById('template-preview'+'-section-'+section.toString()).src=imagePath;
     }
 
-    function scaleImage() {
-      var img = document.getElementById('template-preview');
+    function scaleImage(section) {
+      var img = document.getElementById('template-preview'+'-section-'+section.toString());
       // Original height="146" width="251"
       var width = img.clientWidth;
       var height = img.clientHeight;
       if(width == 251 && height == 146){
-        document.getElementById('template-preview').style.width="502px";
-        document.getElementById('template-preview').style.height="292px";
+        document.getElementById('template-preview'+'-section-'+section.toString()).style.width="502px";
+        document.getElementById('template-preview'+'-section-'+section.toString()).style.height="292px";
       }
       else{
-        document.getElementById('template-preview').style.width="251px";
-        document.getElementById('template-preview').style.height="146px";
+        document.getElementById('template-preview'+'-section-'+section.toString()).style.width="251px";
+        document.getElementById('template-preview'+'-section-'+section.toString()).style.height="146px";
       }
     }
 
@@ -252,9 +266,11 @@ JAVASCRIPT;
     $this->print_typeahead( $data, $name, true );
   }
 
-  protected function print_typeahead( $data, $name, $no_pills = false ) {
+  // $no_pills indicate whether there are any pre-defined tags present in the database to select from.
+  protected function print_typeahead( $data, $name, $args, $no_pills = false) {
     $placeholder_text = 'Add ' . $name;
     $no_pills_string = $no_pills ? 'true' : 'false';
+    print "<script>function getPillsString(){return ".$no_pills_string.";}</script>";
 
     if ( $no_pills ) {
       $placeholder_text = 'Select a ' . $name;
@@ -354,15 +370,18 @@ JAVASCRIPT;
           } // End if
         });
       }();
+
+
 JAVASCRIPT;
-    echo '<script>' . $js . '</script>';
+
+    echo '<script type="text/javascript">' . $js . '</script>';
+  }
+  public function newsletter_post_limit_callback(array $args) {
+    $section = '-section-'.$args['section'];
+    print '<input type="number" min="-1" max="1000" name="limit" id="limit-id'.$section.'" value="-1" />';
   }
 
-  public function newsletter_post_limit_callback() {
-    print '<input type="number" min="-1" max="1000" name="limit" id="limit-id" value="-1" />';
-  }
-
-  private function add_settings_field( $field_name, $field_text, $field_callback ) {
+  private function add_settings_field( $field_name, $field_text, $field_callback, $args = NULL ) {
     add_settings_field(
         $field_name,
         $field_text,
@@ -371,7 +390,8 @@ JAVASCRIPT;
           $field_callback,
         ),
         self::$section_name,
-        self::$section_id
+        self::$section_id,
+        $args
     );
   }
 }

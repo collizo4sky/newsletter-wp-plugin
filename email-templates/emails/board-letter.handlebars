@@ -7,12 +7,12 @@
 </head>
 <style type="text/css">
 body {
-  background-color: #bee5f9;  
-  background-color: white;  
-  font-style:normal; 
+  background-color: #bee5f9;
+  background-color: white;
+  font-style:normal;
   font-family:'Gill Sans / Gill Sans MT', 'Gill Sans MT', 'Droid Sans', Verdana, Arial, Geneva, sans-serif;
   font-size:14px;
-  font-weight:normal; 
+  font-weight:normal;
   margin:0; padding:0;
   font-size:14px;
   line-height: normal;
@@ -42,7 +42,7 @@ h2 {
 h2 a {
   color:#990033;
   text-decoration:none;
-} 
+}
 
 h2 a:hover{
   text-decoration:underline;
@@ -63,11 +63,15 @@ h1, h2, p, div {
   <center>
     <br/>
     <table bgcolor="#ffffff" border="0" cellspacing="15" cellpadding="0" width="700">
-
-      <tr valign="center"><td colspan="1" align="left">
+      {{#if header}}
+      <tr valign="center"><td colspan="1" align="center" width="100%">
         <a href="http://sustainability.asu.edu/" target="_blank" title="ASU's Global Institute of Sustainability"><img alt="Julie Ann Wrigley Global Institute of Sustainability" title="Julie Ann Wrigley Global Institute of Sustainability" src="http://sustainability.asu.edu/docs/gios/events/img/logo-bl.jpg" border="0" width="" height=""></a>
-      </td><td align="right" width="70%">
-      <span style="font-size:25px;color:lightgrey;line-height:normal;"><strong>{{title}}</strong></span>
+      </td></tr>
+      {{/if}}
+      <tr valign="center"><!--<td colspan="1" align="left">
+        <a href="http://sustainability.asu.edu/" target="_blank" title="ASU's Global Institute of Sustainability"><img alt="Julie Ann Wrigley Global Institute of Sustainability" title="Julie Ann Wrigley Global Institute of Sustainability" src="http://sustainability.asu.edu/docs/gios/events/img/logo-bl.jpg" border="0" width="" height=""></a>
+      </td>--><td align="center" width="100%">
+      <span style="font-size:30px;color:#96203D;line-height:normal;"><strong>{{title}}</strong></span>
     </td></tr>
 
     <tr valign="top">
@@ -109,6 +113,7 @@ h1, h2, p, div {
       </td>
     </tr>
 
+    {{#if footer}}
     <tr><td colspan="2" align="center" style="padding:30px;">
 
       *|HTML:LIST_ADDRESS_HTML|*
@@ -118,6 +123,7 @@ h1, h2, p, div {
       <a href="*|UNSUB|*">Unsubscribe</a> <br>
 
     </td></tr>
+    {{/if}}
   </table>
   <br>
 </center>

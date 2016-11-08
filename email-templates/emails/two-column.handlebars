@@ -15,6 +15,7 @@
             <p>{{title}}</p>
           </td>
         </tr>
+        {{#if header}}
         <tr class="header__wrap">
           <td>
             <table class="header__wrap-inner" cellpadding="10">
@@ -28,13 +29,14 @@
             </table>
           </td>
         </tr>
+        {{/if}}
         <tr class="header__title">
           <td>
             <table class="header__title-inner" cellpadding="10">
               <tr>
                 <td align="center">
                   <p class="header__title-text">
-                    {{title}}
+                    <span><strong> {{title}} </strong></span>
                   </p>
                 </td>
               </tr>
@@ -132,6 +134,7 @@
       <img height="32" alt="" src="{{no_image_url}}">
     </td>
   </tr>
+  {{#if footer}}
   <tr>
     <td>
       <table class="footer">
@@ -152,6 +155,7 @@
       </table>
     </td>
   </tr>
+  {{/if}}
 </table>
 
 </body>
